@@ -49,7 +49,7 @@ class LoginController extends Controller
                     throw new \Exception('Mobile number not present in token');
                 }
 
-                $user = User::where('mobile_number', substr($mobile_number, config('constants.mobile_number_length') * -1))->first();
+                $user = User::where('mobile_number', 'like', '%' . substr($mobile_number, config('constants.mobile_number_length') * -1) .'%' )->first();
 
                 if(!$user) {
                     return response()->json(["message" => 'User does not exist'], 404);
