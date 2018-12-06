@@ -69,6 +69,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::put('categories/{category}', 'CategoryController@update')->name('categories.update');
     Route::get('categories/{category}/delete', 'CategoryController@destroy')->name('categories.destroy');
 
+    Route::get('providers', 'ProviderController@index')->name('providers');
+    Route::get('providers/create', 'ProviderController@create')->name('providers.create');
+    Route::post('providers', 'ProviderController@store')->name('providers.store');
+    Route::get('providers/{provider}/edit', 'ProviderController@edit')->name('providers.edit');
+    Route::put('providers/{provider}', 'ProviderController@update')->name('providers.update');
+    Route::get('providers/{provider}/delete', 'ProviderController@destroy')->name('providers.destroy');
+
     Route::get('settings/{setting}/edit', 'SettingController@edit')->name('settings.edit');
     Route::get('settings', 'SettingController@settings')->name('settings');
     Route::put('settings/update-env', 'SettingController@updateEnv')->name('settings.updateEnv');
@@ -76,6 +83,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     Route::get('ratings', 'RatingController@index')->name('ratings');
     Route::get('ratings/{id}', 'RatingController@destroy')->name('ratings.destroy');
+
+    Route::group(['namespace' => 'Json', 'as' => 'json.'], function () {
+        Route::get('subcategories', 'CategoryController@subcategories')->name('subcategories');
+    });
 });
 
 

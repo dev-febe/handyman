@@ -44,6 +44,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('admin.providers') }}">
+                            <i class="fa fa-tags" aria-hidden="true"></i>
+                            Providers
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('admin.categories') }}">
                             <i class="fa fa-tags" aria-hidden="true"></i>
                             Categories

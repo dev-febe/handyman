@@ -12,7 +12,7 @@
 
             @yield('left-sidebar')
 
-            <div class="right_col" role="main">
+            <div class="right_col" role="main" id="app">
                 <div class="page-title">
                     <div class="title_left">
                         <h1 class="h3">@yield('title')</h1>
@@ -41,4 +41,5 @@
 
 @section('scripts')
     {{ Html::script(mix('assets/admin/js/admin.js')) }}
+    {{ Html::script(mix('assets/admin/js/app.js')) }}
 @endsection

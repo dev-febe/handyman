@@ -6,9 +6,11 @@ use App\Http\Requests\Api\Customer\ProviderProfileListRequest;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
+use Rinvex\Subscriptions\Traits\HasSubscriptions;
 
 class ProviderProfile extends Model
 {
+    use HasSubscriptions;
 
     protected $table = 'provider_profiles';
 

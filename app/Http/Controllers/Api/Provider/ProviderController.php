@@ -29,6 +29,6 @@ class ProviderController extends Controller
             $provider->subcategories()->attach($categoryId);
         }
 
-        return response()->json($provider);
+        return response()->json(Auth::user()->provider);
     }
 }

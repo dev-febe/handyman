@@ -99,9 +99,21 @@ mix.scripts([
     'resources/assets/admin/js/users/edit.js',
 ], 'public/assets/admin/js/users/edit.js').version();
 
+mix.scripts([
+    'node_modules/select2/dist/js/select2.full.js',
+], 'public/assets/admin/js/users/select2.js').version();
+
 mix.styles([
     'node_modules/select2/dist/css/select2.css',
 ], 'public/assets/admin/css/users/edit.css').version();
+
+mix.styles([
+    'node_modules/select2/dist/css/select2.css',
+], 'public/assets/admin/css/users/select2.css').version();
+
+mix.styles([
+    'resources/assets/admin/css/form.css',
+], 'public/assets/admin/css/form.css').version();
 
 mix.scripts([
     'node_modules/gentelella/vendors/Flot/jquery.flot.js',
@@ -129,6 +141,9 @@ mix.styles([
     'node_modules/gentelella/vendors/bootstrap-daterangepicker/daterangepicker.css',
     'resources/assets/admin/css/dashboard.css',
 ], 'public/assets/admin/css/dashboard.css').version();
+
+
+mix.js('resources/assets/admin/js/app.js', 'public/assets/admin/js/')
 
 
 /*
