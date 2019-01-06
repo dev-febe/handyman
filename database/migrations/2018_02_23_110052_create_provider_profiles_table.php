@@ -18,7 +18,8 @@ class CreateProviderProfilesTable extends Migration
             $table->integer('primary_category_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned();
             $table->boolean('is_verified')->default(false);
-            $table->string('document_url')->nullable();
+            $table->string('document_url', 500)->nullable();
+	    $table->string('image_url', 500)->nullable();
             $table->double('price')->nullable();
             $table->enum('price_type', ['visit', 'hour'])->nullable();
             $table->string('address')->nullable();

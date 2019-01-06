@@ -26,6 +26,7 @@ class ProviderUpdateRequest extends FormRequest
         return [
             'primary_category_id' => 'required|exists:categories,id',
             'document_url' => 'required|string',
+	    'image_url' => 'required|string',
             'about' => 'required|string',
             'price' => 'required|numeric',
             'price_type' => 'required|in:visit,hour',
