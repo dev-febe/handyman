@@ -81,4 +81,9 @@ class ProviderProfile extends Model
     {
         return $this->hasMany('App\Models\Rating', 'provider_id');
     }
+
+    public function appointments()
+    {
+        return $this->hasMany('App\Models\Appointment', 'provider_id');
+    }
 }

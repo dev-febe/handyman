@@ -25,7 +25,7 @@ class CreateAppointmentStatusLogsTable extends Migration
                 ->on('users')
                 ->onDelete('cascade');
 
-            $table->foreign('user_id', 'appointment_status_log_foreign_appointment')
+            $table->foreign('appointment_id', 'appointment_status_log_foreign_appointment')
                 ->references('id')
                 ->on('appointments')
                 ->onDelete('cascade');

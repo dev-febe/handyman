@@ -105,4 +105,12 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Models\ProviderProfile', 'user_id');
     }
+
+    /**
+     * Get the appointments associated with the user
+     */
+    public function appointments()
+    {
+        return $this->hasMany('App\Models\Appointment', 'user_id');
+    }
 }

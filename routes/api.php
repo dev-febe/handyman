@@ -51,6 +51,11 @@ Route::namespace('Api')->name('api.')->group(function () {
             Route::post('/address', 'AddressController@store')->name('address.store');
             Route::get('/address/{address}', 'AddressController@show')->name('address.show');
             Route::put('/address/{address}/update', 'AddressController@update')->name('address.update');
+
+            /* appointment related */
+            Route::get('/appointment', 'AppointmentController@index')->name('appointment.index');
+            Route::post('/appointment', 'AppointmentController@store')->name('appointment.store');
+            Route::post('/appointment/{appointment}/cancel', 'AppointmentController@cancel')->name('appointment.cancel');
         });
 
         /* Provider related APIs */
@@ -59,6 +64,10 @@ Route::namespace('Api')->name('api.')->group(function () {
             /* profile related */
             Route::get('/profile', 'ProviderController@index')->name('profile.index');
             Route::put('/profile', 'ProviderController@update')->name('profile.update');
+
+            /* appointment related */
+            Route::get('/appointment', 'AppointmentController@index')->name('appointment.index');
+            Route::put('/appointment/{appointment}', 'AppointmentController@update')->name('appointment.update');
         });
     });
 });
