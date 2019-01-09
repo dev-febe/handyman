@@ -22,7 +22,7 @@ class Appointment extends Model
 
     protected $fillable = ['date', 'address_id', 'provider_id', 'user_id', 'time_from', 'time_to', 'status'];
 
-    protected $with = array('user', 'provider', 'logs');
+    protected $with = array('user', 'provider', 'logs', 'address');
 
     public function user()
     {
@@ -37,5 +37,10 @@ class Appointment extends Model
     public function logs()
     {
         return $this->hasMany('App\Models\AppointmentStatusLog', 'appointment_id');
+    }
+
+    public function address()
+    {
+        return $this->belongsTo('App\Models\Address', 'address_id');
     }
 }
