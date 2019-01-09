@@ -30,8 +30,8 @@ Route::namespace('Api')->name('api.')->group(function () {
             Route::get('/categories/all', 'CategoryController@allCategories');
             Route::apiResource('categories', 'CategoryController');
 
-            // question
-            Route::apiResource('questions', 'QuestionController');
+            // provider profile
+            Route::apiResource('providers', 'ProviderProfileController')->except('create');
 
             // user
             Route::get('/users/roles', 'UserController@roles');

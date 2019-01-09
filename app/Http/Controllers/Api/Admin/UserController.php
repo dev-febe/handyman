@@ -51,7 +51,8 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
-            'email' => 'required|email|max:255'
+            'email' => 'required|email|max:255',
+            'image' => 'sometimes|image'
         ]);
 
         $validator->sometimes('email', 'unique:users', function ($input) use ($user) {

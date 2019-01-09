@@ -35,7 +35,8 @@ class CategoryController extends Controller
     {
         $request->validate([
             'title' => 'required|string',
-            'image' => 'image|nullable'
+            'image' => 'image|nullable',
+            'parent_id' => 'exists:categories,id|nullable'
         ]);
 
         $category = new Category();
@@ -75,7 +76,7 @@ class CategoryController extends Controller
         $request->validate([
             'title' => 'required|string',
             'image' => 'image|nullable',
-            'parent_'
+            'parent_id' => 'exists:categories,id|nullable'
         ]);
 
         $category = Category::find($id);
@@ -109,7 +110,7 @@ class CategoryController extends Controller
     {
         $categories = Category::whereRaw("1=1");
         if($request->parent) {
-            $categories = $categories->whereNull('parent');
+            $categories = $categories->whereNull('parent_id');
         }
         return response()->json($categories->get());
     }

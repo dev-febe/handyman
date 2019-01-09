@@ -30,7 +30,15 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        $user->fill($request->only(['fcm_registration_id']));
+
+        if($request->fcm_registration_id) {
+            $user->fcm_registration_id = $request->fcm_registration_id;
+        }
+
+        if($request->image_url) {
+            $user->image_url = $request->image_url;
+        }
+
         $user->save();
 
         return response()->json($user);

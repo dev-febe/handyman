@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('image_url', 500)->nullable();
             $table->string('mobile_number')->unique();
             $table->boolean('mobile_verified')->default(false);
             $table->tinyInteger('active')->default(1)->unsigned();
