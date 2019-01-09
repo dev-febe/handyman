@@ -14,7 +14,7 @@ class ProviderProfile extends Model
 
     protected $table = 'provider_profiles';
 
-    protected $fillable = ['primary_category_id', 'user_id', 'is_verified', 'document_url', 'iamge_url', 'price', 'price_type', 'address', 'longitude', 'latitude', 'about'];
+    protected $fillable = ['primary_category_id', 'user_id', 'is_verified', 'document_url', 'image_url', 'price', 'price_type', 'address', 'longitude', 'latitude', 'about'];
 
     protected $with = array('primary_category','subcategories', 'user');
 
