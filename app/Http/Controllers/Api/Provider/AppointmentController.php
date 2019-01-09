@@ -18,10 +18,12 @@ class AppointmentController extends Controller
 
     public function update(Appointment $appointment, AppointmentUpdateRequest $request)
     {
-        $appointment->status = $request->status;
+        $old_status = $appointment->status;
+
+        $appointment->fill($request->all());
         $appointment->save();
 
-        if($appointment->status != 'rejected') {
+        if($old_status != $appointment->status && $appointment->status != 'rejected') {
             AppointmentStatusLog::create([
                 'user_id' => $appointment->user_id,
                 'appointment_id' => $appointment->id,

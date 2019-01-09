@@ -16,6 +16,36 @@ use Illuminate\Http\Request;
 
 Route::namespace('Api')->name('api.')->group(function () {
 
+    // Backend Api
+    Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
+
+        // auth related
+        Route::namespace('Auth')->group(function () {
+            Route::post('/login', 'LoginController@authenticate');
+        });
+
+        Route::middleware('auth:api')->group(function () {
+
+            // category
+            Route::get('/categories/all', 'CategoryController@allCategories');
+            Route::apiResource('categories', 'CategoryController');
+
+            // question
+            Route::apiResource('questions', 'QuestionController');
+
+            // user
+            Route::get('/users/roles', 'UserController@roles');
+            Route::apiResource('users', 'UserController')->except('create');
+
+            // support
+            Route::get('/supports', 'SupportController@index');
+
+            // settings
+            Route::get('/settings', 'SettingController@index');
+            Route::post('/settings', 'SettingController@update');
+        });
+    });
+
     Route::namespace('Auth')->group(function () {
         Route::post('/check-user', 'LoginController@checkUser')->name('checkUser');
         Route::post('/login', 'LoginController@authenticate')->name('login');
