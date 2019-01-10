@@ -27,15 +27,19 @@ Route::namespace('Api')->name('api.')->group(function () {
         Route::middleware('auth:api')->group(function () {
 
             // category
-            Route::get('/categories/all', 'CategoryController@allCategories');
+            Route::get('/categories/primary', 'CategoryController@allPrimaryCategories');
+            Route::get('/categories/{category}/subcategories', 'CategoryController@allSubCategories');
             Route::apiResource('categories', 'CategoryController');
 
             // provider profile
             Route::apiResource('providers', 'ProviderProfileController')->except('create');
 
+            // appointment
+            Route::apiResource('appointments', 'AppointmentController')->except('create');
+
             // user
             Route::get('/users/roles', 'UserController@roles');
-            Route::apiResource('users', 'UserController')->except('create');
+            Route::apiResource('users', 'UserController');
 
             // support
             Route::get('/supports', 'SupportController@index');

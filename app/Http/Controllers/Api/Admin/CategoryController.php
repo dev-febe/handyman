@@ -106,12 +106,14 @@ class CategoryController extends Controller
         return response()->json([], 204);
     }
 
-    public function allCategories(Request $request)
+    public function allPrimaryCategories(Request $request)
     {
-        $categories = Category::whereRaw("1=1");
-        if($request->parent) {
-            $categories = $categories->whereNull('parent_id');
-        }
+        $categories = Category::whereNull('parent_id');
         return response()->json($categories->get());
+    }
+
+    public function allSubCategories(Request $request, Category $category)
+    {
+        return response()->json($category->subcategories);
     }
 }

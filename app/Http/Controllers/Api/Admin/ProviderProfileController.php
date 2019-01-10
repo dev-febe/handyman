@@ -16,7 +16,23 @@ class ProviderProfileController extends Controller
      */
     public function index(Request $request)
     {
-        $providerProfiles = ProviderProfile::whereRaw("1=1");        
+        $providerProfiles = ProviderProfile::whereRaw("1=1");
+
+        if($request->user_like) {
+            $user_email = $request->user_like;
+            $providerProfiles = $providerProfiles->whereHas('user', function ($query) use ($user_email){
+                $query->where('email', 'like', "%$user_email%");
+            });
+        }
+
+        if($request->is_verified_like) {
+            if($request->is_verified_like == 'Yes') {
+                $providerProfiles = $providerProfiles->where('is_verified', 1);
+            }
+            if($request->is_verified_like == 'No') {
+                $providerProfiles = $providerProfiles->where('is_verified', 0);
+            }
+        }
 
         return response()->json($providerProfiles->orderBy('created_at', 'desc')->paginate(config('constants.paginate_per_page')));
     }
@@ -41,8 +57,10 @@ class ProviderProfileController extends Controller
      * @param  ProviderProfile $providerProfile
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProviderProfile $providerProfile)
+    public function update(Request $request, $id)
     {
+        $providerProfile = ProviderProfile::find($id);
+
         $request->validate([
             'is_verified' => 'required|boolean',
             'primary_category_id' => 'required|exists:categories,id',
@@ -70,6 +88,12 @@ class ProviderProfileController extends Controller
         }
 
         $providerProfile->save();
+
+        // attach subcategories
+        $providerProfile->subcategories()->detach();
+        foreach($request->sub_categories as $subcateg) {
+            $providerProfile->subcategories()->attach($subcateg);
+        }
 
         return response()->json($providerProfile);
     }

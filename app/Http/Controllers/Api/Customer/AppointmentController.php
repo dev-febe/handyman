@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Customer;
 
+use App\Events\Auth\NewAppointment;
+use App\Events\Auth\UpdateAppointment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Customer\AppointmentCreateRequest;
 use App\Models\Appointment;
@@ -22,6 +24,8 @@ class AppointmentController extends Controller
         $appointment->status = 'pending';
         $appointment->save();
 
+        event(new NewAppointment($appointment));
+
         return response()->json(Appointment::find($appointment->id));
     }
 
@@ -29,6 +33,8 @@ class AppointmentController extends Controller
     {
         $appointment->status = 'cancelled';
         $appointment->save();
+
+        event(new UpdateAppointment($appointment, false));
 
         return response()->json($appointment);
     }

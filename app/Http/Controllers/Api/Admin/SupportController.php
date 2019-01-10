@@ -21,6 +21,6 @@ class SupportController  extends Controller
     {
         $supports = Support::whereRaw("1=1");
 
-        return response()->json($supports->paginate(config('constants.paginate_per_page')));
+        return response()->json($supports->orderBy('created_at', 'desc')->paginate(config('constants.paginate_per_page')));
     }
 }

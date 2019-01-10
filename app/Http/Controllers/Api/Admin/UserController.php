@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Events\Auth\Registered;
 use App\Http\Controllers\Controller;
 use App\Models\Auth\Role\Role;
 use App\Models\Auth\User\User;
@@ -18,10 +19,21 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::whereRaw("1=1");
+        $users = User::whereRaw("1=1")->with('roles');
 
-        if($request->search) {
-            $users = User::where('email', 'like', "%" . $request->search . "%");
+        if($request->email_like) {
+            $users = $users->where('email', 'like', "%" . $request->email_like . "%");
+        }
+
+        if($request->name_like) {
+            $users = $users->where('name', 'like', "%" . $request->name_like . "%");
+        }
+
+        if($request->role) {
+            $role = $request->role;
+            $users = $users->whereHas('roles', function ($query) use ($role){
+                $query->where('name', $role);
+            });
         }
 
         return response()->json($users->orderBy('created_at', 'asc')->paginate(config('constants.paginate_per_page')));
@@ -36,6 +48,34 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::with('roles')->find($id);
+
+        return response()->json($user);
+    }
+
+    /**
+     * Add the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'mobile_number' => 'required|unique:users',
+            'image' => 'sometimes|image',
+            'password' => 'required|min:6',
+            'role' => 'required|exists:roles,id'
+        ]);
+
+        $user = User::create($request->all());
+
+        // attach role
+        $user->roles()->attach($request->role);
+
+        event(new Registered($user, Role::find($request->role)->name));
 
         return response()->json($user);
     }
@@ -91,13 +131,15 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  User $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::find($id);
-        $user-forceDelete();
+        // do not allow deletion of administrator user
+        if(!$user->hasRole('administrator')) {
+            $user->forceDelete();
+        }
 
         return response()->json([], 204);
     }
