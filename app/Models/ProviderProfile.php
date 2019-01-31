@@ -22,7 +22,7 @@ class ProviderProfile extends Model
 
     public static function search($user, ProviderProfileListRequest $request)
     {
-        $distanceDelta = 15;
+        $distanceDelta = 15000;
 
         $distanceSetting = Setting::where('key', 'distance_limit')->first();
         if($distanceSetting) {
