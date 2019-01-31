@@ -8,6 +8,7 @@ use App\Http\Requests\Api\Customer\ProviderProfileListRequest;
 use App\Models\ProviderProfile;
 use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProviderController extends Controller
 {
@@ -34,5 +35,18 @@ class ProviderController extends Controller
         $rating->user_id = Auth::user()->id;
         $rating->save();
         return response()->json($rating);
+    }
+
+    public function ratingSummary(ProviderProfile $provider)
+    {
+        return response()->json([
+            "average_rating" => $provider->ratings()->avg('rating'),
+            "total_ratings" => $provider->ratings()->count(),
+            "summary" => DB::table('ratings')->selectRaw('count(*) as total, ROUND(rating) as rounded_rating')
+                ->where('provider_id', $provider->id)
+                ->groupBy('rounded_rating')
+                ->get(),
+            "total_completed" => $provider->appointments()->where('status', 'complete')->count()
+        ]);
     }
 }

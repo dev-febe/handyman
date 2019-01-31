@@ -77,6 +77,7 @@ Route::namespace('Api')->name('api.')->group(function () {
             /* provider related */
             Route::get('/providers', 'ProviderController@index')->name('provider.index');
             Route::get('/providers/{provider}', 'ProviderController@show')->name('provider.show');
+            Route::get('/providers/{provider}/rating-summary', 'ProviderController@ratingSummary')->name('provider.ratingsSummary');
             Route::get('/providers/{provider}/ratings', 'ProviderController@ratings')->name('provider.ratings');
             Route::post('/providers/{provider}/ratings', 'ProviderController@rate')->name('provider.rate');
 
@@ -98,6 +99,8 @@ Route::namespace('Api')->name('api.')->group(function () {
             /* profile related */
             Route::get('/profile', 'ProviderController@index')->name('profile.index');
             Route::put('/profile', 'ProviderController@update')->name('profile.update');
+            // ratings
+            Route::get('/ratings', 'ProviderController@ratings')->name('ratings.index');
 
             /* appointment related */
             Route::get('/appointment', 'AppointmentController@index')->name('appointment.index');
