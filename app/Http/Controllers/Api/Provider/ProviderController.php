@@ -31,4 +31,9 @@ class ProviderController extends Controller
 
         return response()->json(Auth::user()->provider);
     }
+
+    public function ratings()
+    {
+        return response()->json(Auth::user()->provider->ratings()->paginate(config('constants.paginate_per_page')));
+    }
 }
