@@ -79,7 +79,7 @@ class ProviderProfileController extends Controller
 
         if($request->image) {
             $path = $request->file('image')->store('uploads');
-            $providerProfile->image_url = Storage::url($path);
+            $providerProfile->image_url = url('/') . Storage::url($path);
         }
 
         if($request->document) {
