@@ -13,7 +13,7 @@ class AppointmentController extends Controller
 {
     public function index()
     {
-        return response()->json(Auth::user()->provider->appointments()->paginate(config('constants.paginate_per_page')));
+        return response()->json(Auth::user()->provider->appointments()->orderBy('date', 'desc')->paginate(config('constants.paginate_per_page')));
     }
 
     public function update(Appointment $appointment, AppointmentUpdateRequest $request)

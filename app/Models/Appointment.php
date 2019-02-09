@@ -20,9 +20,9 @@ class Appointment extends Model
 
     protected $table = 'appointments';
 
-    protected $fillable = ['date', 'address_id', 'provider_id', 'user_id', 'time_from', 'time_to', 'status'];
+    protected $fillable = ['date', 'address_id', 'provider_id', 'user_id', 'time_from', 'time_to', 'status', 'category_id'];
 
-    protected $with = array('user', 'provider', 'logs', 'address');
+    protected $with = array('user', 'provider', 'logs', 'address', 'category');
 
     public function user()
     {
@@ -42,5 +42,10 @@ class Appointment extends Model
     public function address()
     {
         return $this->belongsTo('App\Models\Address', 'address_id');
+    }
+
+    public function category()
+    {
+	return $this->belongsTo('App\Models\Category', 'category_id');
     }
 }

@@ -26,7 +26,7 @@ class CategoryController extends Controller
             $categories = Category::where('title', 'like', "%" . $request->search . "%");
         }
 
-        $categories = $categories->orderBy('title', 'desc')->paginate(config('constants.paginate_per_page'));
+        $categories = $categories->orderBy('title', 'desc')->paginate(50);
         return response()->json($categories);
     }
 }
