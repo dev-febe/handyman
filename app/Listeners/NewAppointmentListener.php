@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Auth;
 
-use App\Events\Auth\NewAppointment;
+use App\Events\NewAppointment;
 use App\Helpers\PushNotificationHelper;
 use Illuminate\Support\Facades\Log;
 
@@ -35,10 +35,10 @@ class NewAppointmentListener
             $this->appointment = $event->appointment;
 
             if($this->appointment->provider->user->fcm_registration_id) {
-                PushNotificationHelper::send($this->appointment->provider->user->fcm_registration_id,
-                    'New Appointment',
+                OneSignal::send('New Appointment',
+                    $this->appointment->provider->user->fcm_registration_id,
                     'You have recieved new appointment for service',
-                    ["appoinment_id" => $this->appointment->id]);
+                    ["title" => "New Appointment", "body" => 'You have recieved new appointment for service', "appoinment_id" => $this->appointment->id]);
             }
 
         } catch (\Exception $ex) {

@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Auth;
 
-use App\Events\Auth\NewAppointment;
+use App\Events\NewAppointment;
 use App\Helpers\PushNotificationHelper;
 use Illuminate\Support\Facades\Log;
 
