@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Provider;
 
-use App\Events\Auth\UpdateAppointment;
+use App\Events\UpdateAppointment;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Provider\AppointmentUpdateRequest;
 use App\Models\Appointment;

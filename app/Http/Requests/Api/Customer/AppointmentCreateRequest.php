@@ -25,7 +25,7 @@ class AppointmentCreateRequest extends FormRequest
     {
         return [
             'provider_id' => 'required|exists:provider_profiles,id',
-	    'category_id' => 'required|exists:categories,id'
+	    'category_id' => 'required|exists:categories,id',
             'address_id' => 'required|exists:addresses,id',
             'date' => 'required|date',
             'time_from' => 'required|date_format:H:i',
