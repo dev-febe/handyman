@@ -10,7 +10,7 @@ class Category extends Model
 
     protected $table = 'categories';
 
-    protected $fillable = ['title', 'image_url', 'parent_id'];
+    protected $fillable = ['title', 'image_url', 'secondary_image_url','parent_id'];
 
     public function subcategories()
     {

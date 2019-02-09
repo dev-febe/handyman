@@ -36,6 +36,7 @@ class CategoryController extends Controller
         $request->validate([
             'title' => 'required|string',
             'image' => 'image|nullable',
+	    'secondary_image' => 'image|nullable',
             'parent_id' => 'exists:categories,id|nullable'
         ]);
 
@@ -44,6 +45,11 @@ class CategoryController extends Controller
         if($request->image) {
             $path = $request->file('image')->store('uploads');
             $category->image_url = url('/') . Storage::url($path);
+        }
+
+	if($request->secondary_image) {
+            $path = $request->file('secondary_image')->store('uploads');
+            $category->secondary_image_url = url('/') . Storage::url($path);
         }
 
         $category->save();
@@ -85,6 +91,11 @@ class CategoryController extends Controller
         if($request->image) {
             $path = $request->file('image')->store('uploads');
             $category->image_url = url('/') . Storage::url($path);
+	}
+
+	if($request->secondary_image) {
+            $path = $request->file('secondary_image')->store('uploads');
+            $category->secondary_image_url = url('/') . Storage::url($path);
         }
 
         $category->save();
