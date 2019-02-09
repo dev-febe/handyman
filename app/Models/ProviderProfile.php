@@ -18,7 +18,7 @@ class ProviderProfile extends Model
 
     protected $with = array('primary_category','subcategories', 'user');
 
-    protected $appends = array('ratings');
+    protected $appends = array('ratings', 'ratingscount');
 
     public static function search($user, ProviderProfileListRequest $request)
     {
@@ -60,6 +60,15 @@ class ProviderProfile extends Model
     public function getRatingsAttribute()
     {
         return Rating::where('provider_id', $this->attributes['id'])->get()->avg->rating;
+    }
+
+    /**
+     * Calculate rating count
+     * @return integer
+     */
+    public function getRatingscountAttribute()
+    {
+        return Rating::where('provider_id', $this->attributes['id'])->count();
     }
 
     public function user()
