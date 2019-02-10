@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterAppointmentsTable extends Migration
+class AlterAppointmentsAddNotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,7 @@ class AlterAppointmentsTable extends Migration
     public function up()
     {
         Schema::table('appointments', function (Blueprint $table) {
-            $table->integer('category_id')->unsigned()->nullable();
-
-            $table->foreign('category_id', 'appointment_foreign_category')
-                ->references('id')
-                ->on('categories')
-                ->onDelete('cascade');
+            $table->string('notes')->nullable();
         });
     }
 
@@ -31,8 +26,7 @@ class AlterAppointmentsTable extends Migration
     public function down()
     {
         Schema::table('appointments', function (Blueprint $table) {
-            $table->dropForeign('appointment_foreign_category');
-            $table->dropColumn('category_id');
+            $table->dropColumn('notes');
         });
     }
 }
