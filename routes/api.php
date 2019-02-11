@@ -105,6 +105,11 @@ Route::namespace('Api')->name('api.')->group(function () {
             /* appointment related */
             Route::get('/appointment', 'AppointmentController@index')->name('appointment.index');
             Route::put('/appointment/{appointment}', 'AppointmentController@update')->name('appointment.update');
+
+            /* plans related */
+            Route::get('/plans', 'PlanController@plans')->name('plans.index');
+            Route::post('/plans/{plan}/payment/stripe', 'PlanController@makeStripePayment')->name('plans.makeStripePayment');
+            Route::get('/plan-details', 'PlanController@planDetails')->name('plans.planDetails');
         });
     });
 });
