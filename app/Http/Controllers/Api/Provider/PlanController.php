@@ -22,10 +22,9 @@ class PlanController extends Controller
     public function planDetails()
     {
         $user = Auth::user();
-        $user->subscription('main')->getFeatureUsage('leads-per-day');
         return response([
             "subscription" => $user->subscription('main'),
-            "active" => $user->subscription('main')->active(),
+            "active" => $user->subscription('main') ? $user->subscription('main')->active() : false,
         ]);
     }
 
