@@ -21,7 +21,7 @@ class CreateAppointmentsTable extends Migration
             $table->date('date');
             $table->time('time_from');
             $table->time('time_to');
-            $table->enum('status', ['pending', 'accepted', 'ongoing', 'complete', 'cancelled', 'rejected'])->nullable();
+            $table->enum('status', ['pending', 'accepted', 'onway', 'ongoing', 'complete', 'cancelled', 'rejected'])->nullable();
             $table->timestamps();
 
             $table->foreign('user_id', 'appointment_foreign_user')

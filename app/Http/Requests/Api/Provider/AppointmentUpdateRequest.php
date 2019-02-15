@@ -24,7 +24,7 @@ class AppointmentUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => 'sometimes|in:accepted,ongoing,complete,rejected',
+            'status' => 'sometimes|in:accepted,onway,ongoing,complete,rejected',
             'date' => 'sometimes|date',
             'time_from' => 'required_with:date|date_format:H:i',
             'time_to' => 'required_with:date|date_format:H:i'
