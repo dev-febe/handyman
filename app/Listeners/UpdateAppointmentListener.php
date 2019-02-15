@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Auth;
 
+use OneSignal;
 use App\Events\NewAppointment;
 use App\Helpers\PushNotificationHelper;
 use Illuminate\Support\Facades\Log;
