@@ -26,6 +26,7 @@
         "berkayk/onesignal-laravel": "^1.0",
         "brotzka/laravel-dotenv-editor": "^2.0",
         "brozot/laravel-fcm": "^1.2",
+        "cartalyst/stripe-laravel": "9.*",
         "creativeorange/gravatar": "~1.0",
         "davejamesmiller/laravel-breadcrumbs": "^3.0",
         "kyslik/column-sortable": "^5.4",
@@ -36,7 +37,7 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "5.7.*",
         "rinvex/laravel-subscriptions": "^1.0",
-        "cartalyst/stripe-laravel": "9.*"
+        "spatie/laravel-cors": "^1.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
