@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Passport\HasApiTokens;
 
 /**
@@ -14,10 +15,18 @@ use Laravel\Passport\HasApiTokens;
  */
 class Address extends Model
 {
+    use SoftDeletes;
 
     protected $table = 'addresses';
 
     protected $fillable = ['title', 'address', 'latitude', 'longitude'];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 
     public function user()
     {

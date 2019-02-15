@@ -41,7 +41,7 @@ class Appointment extends Model
 
     public function address()
     {
-        return $this->belongsTo('App\Models\Address', 'address_id');
+        return $this->belongsTo('App\Models\Address', 'address_id')->withTrashed();
     }
 
     public function category()
