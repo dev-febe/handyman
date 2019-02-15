@@ -39,50 +39,50 @@ class UpdateAppointmentListener
             if($this->rescheduled) {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    PushNotificationHelper::send($this->appointment->provider->user->fcm_registration_id,
-                        'Appointment Rescheduled',
+                    OneSignal::sendNotificationToUser('Appointment Rescheduled',
+                        $this->appointment->user->fcm_registration_id,
                         'Your appointment with provider is rescheduled',
-                        ["appoinment_id" => $this->appointment->id]);
+                        ["title" => "Appointment Rescheduled", "body" => 'Your appointment with provider is rescheduled', "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "cancelled") {
                 if($this->appointment->provider->user->fcm_registration_id) {
                     // send notification to provider
-                    PushNotificationHelper::send($this->appointment->provider->user->fcm_registration_id,
-                        'Appointment Cancelled',
+                    OneSignal::sendNotificationToUser('Appointment Cancelled',
+                        $this->appointment->provider->user->fcm_registration_id,
                         'Client has cancelled the appointment',
-                        ["appoinment_id" => $this->appointment->id]);
+                        ["title" => "Appointment Cancelled", "body" => 'Client has cancelled the appointment', "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "rejected") {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    PushNotificationHelper::send($this->appointment->provider->user->fcm_registration_id,
-                        'Appointment Rejected',
+                    OneSignal::sendNotificationToUser('Appointment Rejected',
+                        $this->appointment->user->fcm_registration_id,
                         'Provider has rejected the appointment',
-                        ["appoinment_id" => $this->appointment->id]);
+                        ["title" => "Appointment Rejected", "body" => 'Provider has rejected the appointment', "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "accepted") {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    PushNotificationHelper::send($this->appointment->provider->user->fcm_registration_id,
-                        'Appointment Accepted',
+                    OneSignal::sendNotificationToUser('Appointment Accepted',
+                        $this->appointment->user->fcm_registration_id,
                         'Provider has accepted the appointment',
-                        ["appoinment_id" => $this->appointment->id]);
+                        ["title" => "Appointment Accepted", "body" => 'Provider has accepted the appointment', "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "ongoing") {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    PushNotificationHelper::send($this->appointment->provider->user->fcm_registration_id,
-                        'Appointment Started',
-                        'Provider has started the appointment',
-                        ["appoinment_id" => $this->appointment->id]);
+                    OneSignal::sendNotificationToUser('Appointment Started',
+                        $this->appointment->user->fcm_registration_id,
+                        'Provider has started the appointmen',
+                        ["title" => "Appointment Started", "body" => 'Provider has started the appointment', "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "complete") {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    PushNotificationHelper::send($this->appointment->provider->user->fcm_registration_id,
-                        'Appointment Complete',
+                    OneSignal::sendNotificationToUser('Appointment Complete',
+                        $this->appointment->user->fcm_registration_id,
                         'Your appointment with provider is complete',
-                        ["appoinment_id" => $this->appointment->id]);
+                        ["title" => "Appointment Complete", "body" => 'Your appointment with provider is complete', "appoinment_id" => $this->appointment->id]);
                 }
             }
 
