@@ -86,6 +86,7 @@ Route::namespace('Api')->name('api.')->group(function () {
             Route::post('/address', 'AddressController@store')->name('address.store');
             Route::get('/address/{address}', 'AddressController@show')->name('address.show');
             Route::put('/address/{address}/update', 'AddressController@update')->name('address.update');
+            Route::delete('/address/{address}', 'AddressController@delete')->name('address.delete');
 
             /* appointment related */
             Route::get('/appointment', 'AppointmentController@index')->name('appointment.index');
