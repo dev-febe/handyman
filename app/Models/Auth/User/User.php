@@ -12,7 +12,7 @@ use App\Models\Auth\User\Traits\Scopes\UserScopes;
 use App\Models\Auth\User\Traits\Relations\UserRelations;
 use Kyslik\ColumnSortable\Sortable;
 use Laravel\Passport\HasApiTokens;
-use Rinvex\Subscriptions\Traits\HasSubscriptions;
+use Rennokki\Plans\Traits\HasPlans;
 
 /**
  * App\Models\Auth\User\User
@@ -62,7 +62,7 @@ class User extends Authenticatable
         Sortable,
         HasApiTokens,
         Protectable,
-        HasSubscriptions;
+        HasPlans;
 
     public $sortable = ['name', 'email', 'created_at', 'updated_at'];
 

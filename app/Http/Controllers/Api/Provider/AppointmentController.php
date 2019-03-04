@@ -8,6 +8,7 @@ use App\Http\Requests\Api\Provider\AppointmentUpdateRequest;
 use App\Models\Appointment;
 use App\Models\AppointmentStatusLog;
 use Illuminate\Support\Facades\Auth;
+use Rennokki\Plans\Models\PlanSubscriptionUsageModel;
 
 class AppointmentController extends Controller
 {
@@ -18,6 +19,29 @@ class AppointmentController extends Controller
 
     public function update(Appointment $appointment, AppointmentUpdateRequest $request)
     {
+        if($request->status == 'accepted') {
+            // can accept the job?
+            $canAccept = false;
+            $user = Auth::user();
+            $leadsRemainingForToday = null;
+
+            if ($user->hasActiveSubscription()) {
+                $subscription = $user->activeSubscription();
+                $leadsUsedToday = PlanSubscriptionUsageModel::where('subscription_id', $subscription->id)
+                    ->whereDate('created_at', Carbon::today())->count();
+                $limit = $subscription->features()->code('leads_per_day')->first()->limit / 30;
+                $leadsRemainingForToday = $limit - $leadsUsedToday;
+
+                if ($leadsRemainingForToday > 0) {
+                    $canAccept = true;
+                }
+            }
+
+            if(!$canAccept) {
+                return response()->json(["message" => 'Not enough credits left'], 403);
+            }
+        }
+
         $old_status = $appointment->status;
         $rescheduled = false;
 

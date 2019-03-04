@@ -41,6 +41,9 @@ Route::namespace('Api')->name('api.')->group(function () {
             Route::get('/users/roles', 'UserController@roles');
             Route::apiResource('users', 'UserController');
 
+            // plan
+            Route::apiResource('plans', 'PlanController')->except('create')->except('delete');
+
             // support
             Route::get('/supports', 'SupportController@index');
 

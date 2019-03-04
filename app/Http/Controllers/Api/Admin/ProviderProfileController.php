@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\ProviderProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Rennokki\Plans\Models\PlanModel;
+use Rennokki\Plans\Models\PlanSubscriptionModel;
 
 class ProviderProfileController extends Controller
 {
@@ -73,6 +75,7 @@ class ProviderProfileController extends Controller
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'sub_categories' => 'required|array|exists:categories,id',
+            'plan_id' => 'exists:plans,id|nullable'
         ]);
 
         $providerProfile->fill($request->all());
@@ -95,7 +98,17 @@ class ProviderProfileController extends Controller
             $providerProfile->subcategories()->attach($subcateg);
         }
 
-        return response()->json($providerProfile);
+        $user = $providerProfile->user;
+        if($request->plan_id && ($user->hasActiveSubscription() && $user->activeSubscription()->plan_id != $request->plan_id)) {
+            // get any existing subscription
+            if($user->hasActiveSubscription()) {
+                $user->cancelCurrentSubscription();
+            }
+            $plan = PlanModel::find($request->plan_id);
+            $user->subscribeTo($plan, $plan->duration);
+        }
+
+        return response()->json($providerProfile->refresh());
     }
 
     /**

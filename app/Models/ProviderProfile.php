@@ -3,22 +3,21 @@
 namespace App\Models;
 
 use App\Http\Requests\Api\Customer\ProviderProfileListRequest;
+use App\Models\Auth\User\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
-use Rinvex\Subscriptions\Traits\HasSubscriptions;
+use Rennokki\Plans\Models\PlanSubscriptionModel;
 
 class ProviderProfile extends Model
 {
-    use HasSubscriptions;
-
     protected $table = 'provider_profiles';
 
     protected $fillable = ['primary_category_id', 'user_id', 'is_verified', 'document_url', 'image_url', 'price', 'price_type', 'address', 'longitude', 'latitude', 'about'];
 
     protected $with = array('primary_category','subcategories', 'user');
 
-    protected $appends = array('ratings', 'ratingscount');
+    protected $appends = array('ratings', 'ratingscount', 'plan');
 
     public static function search($user, ProviderProfileListRequest $request)
     {
@@ -69,6 +68,15 @@ class ProviderProfile extends Model
     public function getRatingscountAttribute()
     {
         return Rating::where('provider_id', $this->attributes['id'])->count();
+    }
+
+    public function getPlanAttribute()
+    {
+        $user = User::find($this->attributes['user_id']);
+        if($user->hasActiveSubscription()) {
+            return $user->activeSubscription()->plan_id;
+        }
+        return null;
     }
 
     public function user()
