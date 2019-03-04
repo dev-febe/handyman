@@ -43,7 +43,7 @@ class PlanTableSeeder extends Seeder
             'code' => 'leads_per_day',
             'description' => 'leads_per_day',
             'type' => 'limit',
-            'limit' => 10,
+            'limit' => 300,
             'plan_id' => $premium->id
         ]);
 
@@ -52,7 +52,7 @@ class PlanTableSeeder extends Seeder
             'code' => 'leads_per_day',
             'description' => 'leads_per_day',
             'type' => 'limit',
-            'limit' => 5,
+            'limit' => 150,
             'plan_id' => $economy->id
         ]);
 
@@ -61,7 +61,7 @@ class PlanTableSeeder extends Seeder
             'code' => 'leads_per_day',
             'description' => 'leads_per_day',
             'type' => 'limit',
-            'limit' => 1,
+            'limit' => 30,
             'plan_id' => $basic->id
         ]);
     }
