@@ -56,7 +56,9 @@ class LoginController extends Controller
                 }
 
                 $token = $user->createToken('Default')->accessToken;
-                return response()->json(["token" => $token, "user" => $user]);
+                $user->mobile_verified = 1;
+                $user->save();
+                return response()->json(["token" => $token, "user" => $user->refresh()]);
             } catch(\Exception $ex) {
                 throw new BadRequestHttpException($ex->getMessage());
             }

@@ -22,6 +22,7 @@ class SettingsTableSeeder extends Seeder
             ["key" => "privacy_policy", "value" => "Demo privacy policy"],
             ["key" => "about_us", "value" => "Demo privacy policy"],
             ["key" => "faq", "value" => "Demo FAQ"],
+            ["key" => "terms", "value" => "Demo Terms and Condition"]
         ]);
     }
 }
