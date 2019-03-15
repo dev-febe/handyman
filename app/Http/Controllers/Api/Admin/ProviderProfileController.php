@@ -75,7 +75,7 @@ class ProviderProfileController extends Controller
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'sub_categories' => 'required|array|exists:categories,id',
-            'plan_id' => 'exists:plans,id|nullable'
+            'plan_id' => 'nullable'
         ]);
 
         $providerProfile->fill($request->all());
@@ -99,13 +99,25 @@ class ProviderProfileController extends Controller
         }
 
         $user = $providerProfile->user;
+
+        // cancel the subscription of a user
+        if(!$request->plan_id && $user->hasActiveSubscription()) {
+            $user->cancelCurrentSubscription();
+        }
+
+        // subscribe a user to the plan
         if($request->plan_id && (!$user->hasActiveSubscription() || $user->activeSubscription()->plan_id != $request->plan_id)) {
-            // get any existing subscription
+            // cancel any existing subscription
             if($user->hasActiveSubscription()) {
                 $user->cancelCurrentSubscription();
             }
-            $plan = PlanModel::find($request->plan_id);
-            $user->subscribeTo($plan, $plan->duration);
+
+
+            // make sure plan exists
+            if(PlanModel::where('id', $request->plan_id)->exists()) {
+                $plan = PlanModel::find($request->plan_id);
+                $user->subscribeTo($plan, $plan->duration);
+            }
         }
 
         return response()->json($providerProfile->refresh());
