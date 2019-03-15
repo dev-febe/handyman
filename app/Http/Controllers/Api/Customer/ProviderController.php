@@ -24,7 +24,7 @@ class ProviderController extends Controller
 
     public function ratings(ProviderProfile $provider)
     {
-        return response()->json($provider->ratings()->paginate(config('constants.paginate_per_page')));
+        return response()->json($provider->ratings()->orderBy('created_at', 'desc')->paginate(config('constants.paginate_per_page')));
     }
 
     public function rate(ProviderProfile $provider, RatingCreateRequest $request)
