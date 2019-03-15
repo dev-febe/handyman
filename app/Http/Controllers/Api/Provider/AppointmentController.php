@@ -9,6 +9,7 @@ use App\Models\Appointment;
 use App\Models\AppointmentStatusLog;
 use Illuminate\Support\Facades\Auth;
 use Rennokki\Plans\Models\PlanSubscriptionUsageModel;
+use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {

@@ -99,7 +99,7 @@ class ProviderProfileController extends Controller
         }
 
         $user = $providerProfile->user;
-        if($request->plan_id && ($user->hasActiveSubscription() && $user->activeSubscription()->plan_id != $request->plan_id)) {
+        if($request->plan_id && (!$user->hasActiveSubscription() || $user->activeSubscription()->plan_id != $request->plan_id)) {
             // get any existing subscription
             if($user->hasActiveSubscription()) {
                 $user->cancelCurrentSubscription();
