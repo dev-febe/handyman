@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CheckUserRequest;
+use App\Http\Requests\Api\LoginRequest;
 use App\Models\Auth\User\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class LoginController extends Controller
 //        return response()->json(["error" => "Invalid Login"], 400);
 //    }
 
-    public function authenticate(Request $request)
+    public function authenticate(LoginRequest $request)
     {
         $publicKeyURL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
         $kids = json_decode(file_get_contents($publicKeyURL), true);
@@ -53,6 +54,10 @@ class LoginController extends Controller
 
                 if(!$user) {
                     return response()->json(["message" => 'User does not exist'], 404);
+                }
+
+                if(!$user->hasRole($request->role)) {
+                    return response()->json(["message" => 'Invalid Role'], 403);
                 }
 
                 $token = $user->createToken('Default')->accessToken;

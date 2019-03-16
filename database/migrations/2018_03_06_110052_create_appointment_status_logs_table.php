@@ -17,7 +17,7 @@ class CreateAppointmentStatusLogsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('appointment_id')->unsigned();
-            $table->enum('status', ['pending', 'accepted', 'ongoing', 'complete', 'cancelled', 'rejected'])->nullable();
+            $table->enum('status', ['pending', 'accepted', 'onway', 'ongoing', 'complete', 'cancelled', 'rejected'])->nullable();
             $table->timestamps();
 
             $table->foreign('user_id', 'appointment_status_log_foreign_user')
