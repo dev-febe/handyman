@@ -3,7 +3,7 @@
 namespace App\Listeners\Auth;
 
 use OneSignal;
-use App\Events\NewAppointment;
+use App\Events\UpdateAppointment;
 use App\Helpers\PushNotificationHelper;
 use Illuminate\Support\Facades\Log;
 
@@ -30,8 +30,9 @@ class UpdateAppointmentListener
      * @param  NewAppointment $event
      * @return void
      */
-    public function handle(NewAppointment $event)
+    public function handle(UpdateAppointment $event)
     {
+	    dd("wasdasd");
         try {
             $this->event = $event;
             $this->appointment = $event->appointment;
