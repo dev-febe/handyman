@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\Auth\NewAppointment;
+use App\Events\NewAppointment;
 use App\Events\Auth\SocialLogin;
 use App\Listeners\Auth\LoginListener;
 use App\Listeners\Auth\LogoutListener;
@@ -12,6 +12,7 @@ use App\Listeners\Auth\SocialLoginListener;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use App\Events\Auth\Registered;
+use App\Events\UpdateAppointment;
 use App\Listeners\Auth\RegisteredListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 

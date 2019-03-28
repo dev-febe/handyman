@@ -32,7 +32,6 @@ class UpdateAppointmentListener
      */
     public function handle(UpdateAppointment $event)
     {
-	    dd("wasdasd");
         try {
             $this->event = $event;
             $this->appointment = $event->appointment;
