@@ -46,7 +46,7 @@ class AppointmentController extends Controller
         $old_status = $appointment->status;
         $rescheduled = false;
 
-        if($appointment->date != $request->date) {
+        if($request->date && $appointment->date != $request->date) {
             // if provider has changed the date of appointment, we consider it as reschedule
             $rescheduled = true;
         }
