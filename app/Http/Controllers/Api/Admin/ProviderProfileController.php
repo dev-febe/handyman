@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exports\ProviderProfileExport;
 use App\Http\Controllers\Controller;
 use App\Models\ProviderProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 use Rennokki\Plans\Models\PlanModel;
 use Rennokki\Plans\Models\PlanSubscriptionModel;
 
@@ -135,5 +137,10 @@ class ProviderProfileController extends Controller
         $providerProfile->delete();
 
         return response()->json([], 204);
+    }
+
+    public function export()
+    {
+        return Excel::download(new ProviderProfileExport(), 'providers.xlsx');
     }
 }

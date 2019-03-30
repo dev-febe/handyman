@@ -198,8 +198,8 @@ return [
         \App\Providers\ToJsServiceProvider::class,
         \App\Providers\MetaServiceProvider::class,
         Kyslik\ColumnSortable\ColumnSortableServiceProvider::class,
-        \App\Providers\ProtectionProvider::class
-
+	\App\Providers\ProtectionProvider::class,
+	Maatwebsite\Excel\ExcelServiceProvider::class
     ],
 
     /*
@@ -258,7 +258,8 @@ return [
         'Gravatar' => Creativeorange\Gravatar\Facades\Gravatar::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'ToJs' => \App\Helpers\ToJs\Facades\ToJsFacade::class,
-        'Meta' => \App\Helpers\Meta\Facades\MetaFacade::class
+	'Meta' => \App\Helpers\Meta\Facades\MetaFacade::class,
+	'Excel' => Maatwebsite\Excel\Facades\Excel::class
 
     ],
 

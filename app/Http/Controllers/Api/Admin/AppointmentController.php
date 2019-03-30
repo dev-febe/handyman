@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exports\AppointmentExport;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AppointmentController extends Controller
 {
@@ -93,5 +95,10 @@ class AppointmentController extends Controller
         $appointment->delete();
 
         return response()->json([], 204);
+    }
+
+    public function export()
+    {
+        return Excel::download(new AppointmentExport(), 'appointments.xlsx');
     }
 }

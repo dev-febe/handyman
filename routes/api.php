@@ -24,6 +24,11 @@ Route::namespace('Api')->name('api.')->group(function () {
             Route::post('/login', 'LoginController@authenticate');
         });
 
+        // export data
+        Route::get('/download/user', 'UserController@export');
+        Route::get('/download/appointment', 'AppointmentController@export');
+        Route::get('/download/provider', 'ProviderProfileController@export');
+
         Route::middleware('auth:api')->group(function () {
 
             // category

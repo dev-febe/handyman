@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Events\Auth\Registered;
+use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Models\Auth\Role\Role;
 use App\Models\Auth\User\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Validator;
 
 
@@ -148,5 +150,10 @@ class UserController extends Controller
     {
         $roles = Role::all();
         return response()->json($roles);
+    }
+
+    public function export()
+    {
+        return Excel::download(new UsersExport, 'users.xlsx');
     }
 }
