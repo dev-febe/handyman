@@ -38,7 +38,7 @@ class NewAppointmentListener
             if($this->appointment->provider->user->fcm_registration_id) {
                 OneSignal::sendNotificationToUser('New Appointment',
                     $this->appointment->provider->user->fcm_registration_id,
-                    'You have recieved new appointment for service',
+                    null,
                     ["title" => "New Appointment", "body" => 'You have recieved new appointment for service', "appoinment_id" => $this->appointment->id]);
             }
 
