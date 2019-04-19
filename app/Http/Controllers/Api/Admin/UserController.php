@@ -94,11 +94,16 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255',
+            'mobile_number' => 'required|max:15',
             'image' => 'sometimes|image'
         ]);
 
         $validator->sometimes('email', 'unique:users', function ($input) use ($user) {
             return strtolower($input->email) != strtolower($user->email);
+        });
+
+        $validator->sometimes('mobile_number', 'unique:users', function ($input) use ($user) {
+            return strtolower($input->mobile_number) != strtolower($user->mobile_number);
         });
 
         $validator->sometimes('password', 'min:6|confirmed', function ($input) {
@@ -111,6 +116,7 @@ class UserController extends Controller
 
         $user->name = $request->get('name');
         $user->email = $request->get('email');
+        $user->mobile_number = $request->get('mobile_number');
 
         if ($request->has('password')) {
             $user->password = bcrypt($request->get('password'));
