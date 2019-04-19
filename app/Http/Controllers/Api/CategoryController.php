@@ -23,7 +23,7 @@ class CategoryController extends Controller
 
         // search
         if($request->search) {
-            $categories = Category::where('title', 'like', "%" . $request->search . "%");
+            $categories = $categories->where('title', 'like', "%" . $request->search . "%");
         }
 
         $categories = $categories->orderBy('title', 'desc')->paginate(50);
