@@ -88,6 +88,7 @@ Route::namespace('Api')->name('api.')->group(function () {
             Route::get('/providers/{provider}/rating-summary', 'ProviderController@ratingSummary')->name('provider.ratingsSummary');
             Route::get('/providers/{provider}/ratings', 'ProviderController@ratings')->name('provider.ratings');
             Route::post('/providers/{provider}/ratings', 'ProviderController@rate')->name('provider.rate');
+            Route::get('/providers/{provider}/portfolios', 'ProviderController@portfolios')->name('provider.portfolio');
 
             /* address related */
             Route::get('/address', 'AddressController@index')->name('address.index');
@@ -110,6 +111,11 @@ Route::namespace('Api')->name('api.')->group(function () {
             Route::put('/profile', 'ProviderController@update')->name('profile.update');
             // ratings
             Route::get('/ratings', 'ProviderController@ratings')->name('ratings.index');
+
+            // portfolio
+            Route::get('/portfolio', 'PortfolioController@index')->name('portfolio.index');
+            Route::post('/portfolio', 'PortfolioController@store')->name('portfolio.store');
+            Route::delete('/portfolio/{portfolio}', 'PortfolioController@delete')->name('portfolio.delete');
 
             /* appointment related */
             Route::get('/appointment', 'AppointmentController@index')->name('appointment.index');

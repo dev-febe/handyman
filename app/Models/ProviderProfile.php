@@ -103,4 +103,9 @@ class ProviderProfile extends Model
     {
         return $this->hasMany('App\Models\Appointment', 'provider_id');
     }
+
+    public function portfolios()
+    {
+        return $this->hasMany('App\Models\ProviderPortfolio', 'provider_id');
+    }
 }
