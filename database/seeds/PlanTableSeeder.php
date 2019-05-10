@@ -38,6 +38,7 @@ class PlanTableSeeder extends Seeder
             'duration' => 30, // in days
         ]);
 
+        // leads per day in each plan
         PlanFeatureModel::create([
             'name' => 'Leads per day',
             'code' => 'leads_per_day',
@@ -63,6 +64,23 @@ class PlanTableSeeder extends Seeder
             'type' => 'limit',
             'limit' => 30,
             'plan_id' => $basic->id
+        ]);
+
+        // advertisement in each plan
+        PlanFeatureModel::create([
+            'name' => 'Advertise',
+            'code' => 'advertise',
+            'description' => 'advertise',
+            'type' => 'feature',
+            'plan_id' => $premium->id
+        ]);
+
+        PlanFeatureModel::create([
+            'name' => 'Advertise',
+            'code' => 'advertise',
+            'description' => 'advertise',
+            'type' => 'feature',
+            'plan_id' => $economy->id
         ]);
     }
 }

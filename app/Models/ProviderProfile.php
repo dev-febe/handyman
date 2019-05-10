@@ -34,12 +34,15 @@ class ProviderProfile extends Model
             . " Point($request->long, $request->lat ))"
             . " as distance";
 
+        // advertisement
+        $subqueryAdvertisement = "EXISTS (SELECT id FROM plans_subscriptions WHERE model_id=provider_profiles.user_id AND plan_id IN(1,2)) as advertisement";
+
         $subqueryDistanceWhere = "ST_Distance_Sphere(Point(provider_profiles.longitude,"
             . " provider_profiles.latitude),"
             . " Point($request->long, $request->lat ))"
             . " < " . $distanceDelta;
 
-        $providers = ProviderProfile::select('*', DB::raw($subqueryDistance))->whereRaw($subqueryDistanceWhere);
+        $providers = ProviderProfile::select('*', DB::raw($subqueryAdvertisement), DB::raw($subqueryDistance))->whereRaw($subqueryDistanceWhere);
 
         // filter for category
         $categoryId = $request->input('category');
@@ -47,7 +50,7 @@ class ProviderProfile extends Model
             $query->where('id', $categoryId);
         });
 
-        $providers->get();
+        $providers->orderBy('advertisement', 'desc')->get();
 
         return $providers;
     }
