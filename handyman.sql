@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 19, 2019 at 04:25 PM
+-- Generation Time: May 17, 2019 at 03:05 PM
 -- Server version: 10.1.33-MariaDB
 -- PHP Version: 7.2.6
 
@@ -21,6 +21,55 @@ SET time_zone = "+00:00";
 --
 -- Database: `handyman`
 --
+
+DELIMITER $$
+--
+-- Functions
+--
+CREATE DEFINER=`root`@`localhost` FUNCTION `ST_Distance_Sphere` (`SOURCE` POINT, `DEST` POINT) RETURNS FLOAT BEGIN
+    DECLARE radlat1 FLOAT;
+    DECLARE radlat2 FLOAT;
+    DECLARE radlon1 FLOAT;
+    DECLARE radlon2 FLOAT;
+    DECLARE theta FLOAT;
+    DECLARE radtheta FLOAT;
+    DECLARE dist FLOAT;
+    DECLARE PI FLOAT;
+    DECLARE Q_LAT FLOAT;
+    DECLARE Q_LONG FLOAT;
+    DECLARE NAV_LAT FLOAT;
+    DECLARE NAV_LONG FLOAT;
+
+    SET PI = PI();
+    SET dist = 0;
+    SET Q_LONG = ST_X(SOURCE);
+    SET Q_LAT = ST_Y(SOURCE);
+    SET NAV_LONG = ST_X(DEST);
+    SET NAV_LAT = ST_Y(DEST);
+
+    IF ((Q_LAT IS NULL OR Q_LAT = 0) OR (Q_LONG IS NULL OR Q_LONG = 0)
+        OR (NAV_LAT IS NULL OR NAV_LAT = 0) OR (NAV_LONG IS NULL OR NAV_LONG = 0)) THEN
+        RETURN dist;
+    ELSE
+        SET radlat1 = PI * (Q_LAT/180);
+        SET radlat2 = PI * (NAV_LAT/180);
+        SET radlon1 = PI * (Q_LONG/180);
+        SET radlon2 = PI * (NAV_LONG/180);
+        SET theta = Q_LONG-NAV_LONG;
+        SET radtheta = PI * (theta/180);
+        SET dist = SIN(radlat1) * SIN(radlat2) + COS(radlat1) * COS(radlat2) * COS(radtheta);
+        SET dist = ACOS(dist);
+        SET dist = dist * (180/PI);
+        SET dist = dist * 60 * 1.1515;
+        SET dist = dist * 1.609344;
+
+        SET dist = CEILING(dist);
+
+    RETURN dist;
+    END IF;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -132,7 +181,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (21, '2018_03_07_110052_alter_appointments_table', 1),
 (22, '2018_03_07_110053_alter_appointments_add_notes_table', 1),
 (23, '2018_06_07_123211_plans', 1),
-(24, '2019_06_07_123211_plans_metadata', 1);
+(24, '2019_06_07_123211_plans_metadata', 1),
+(25, '2019_06_10_000001_create_provider_portfolios_table', 1);
 
 -- --------------------------------------------------------
 
@@ -191,8 +241,8 @@ CREATE TABLE `oauth_clients` (
 --
 
 INSERT INTO `oauth_clients` (`id`, `user_id`, `name`, `secret`, `redirect`, `personal_access_client`, `password_client`, `revoked`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Handyman Personal Access Client', 'WDlqoPToPP62Z4Z4ayV3cND1Sx89uP6jizSivTaP', 'http://localhost', 1, 0, 0, '2019-03-19 09:55:42', '2019-03-19 09:55:42'),
-(2, NULL, 'Handyman Password Grant Client', 'OO78QQwK47vfXEK2dxaHgkq5u8tPjfFMKIMJ6Vji', 'http://localhost', 0, 1, 0, '2019-03-19 09:55:42', '2019-03-19 09:55:42');
+(1, NULL, 'Handyman Personal Access Client', 't8MwD3onvCwFTOoiok2JeKFGZ3kNhGyAot3vJZ9P', 'http://localhost', 1, 0, 0, '2019-05-17 07:01:32', '2019-05-17 07:01:32'),
+(2, NULL, 'Handyman Password Grant Client', 'mQQJrHUWFDGQL5BggEwHkiOpQoy6pn3Mz3aIcjP2', 'http://localhost', 0, 1, 0, '2019-05-17 07:01:32', '2019-05-17 07:01:32');
 
 -- --------------------------------------------------------
 
@@ -212,7 +262,7 @@ CREATE TABLE `oauth_personal_access_clients` (
 --
 
 INSERT INTO `oauth_personal_access_clients` (`id`, `client_id`, `created_at`, `updated_at`) VALUES
-(1, 1, '2019-03-19 09:55:42', '2019-03-19 09:55:42');
+(1, 1, '2019-05-17 07:01:32', '2019-05-17 07:01:32');
 
 -- --------------------------------------------------------
 
@@ -262,9 +312,9 @@ CREATE TABLE `plans` (
 --
 
 INSERT INTO `plans` (`id`, `name`, `description`, `price`, `currency`, `duration`, `metadata`, `created_at`, `updated_at`) VALUES
-(1, 'Premium', 'Get 10 leads per day for a month.', 50.00, 'INR', 30, NULL, '2019-03-19 09:55:16', '2019-03-19 09:55:16'),
-(2, 'Economy', 'Get 5 leads per day for a month.', 30.00, 'INR', 30, NULL, '2019-03-19 09:55:16', '2019-03-19 09:55:16'),
-(3, 'Basic', 'Get 1 leads for a month.', 30.00, 'INR', 30, NULL, '2019-03-19 09:55:16', '2019-03-19 09:55:16');
+(1, 'Premium', 'Get 10 leads per day for a month.', 50.00, 'INR', 30, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
+(2, 'Economy', 'Get 5 leads per day for a month.', 30.00, 'INR', 30, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
+(3, 'Basic', 'Get 1 leads for a month.', 30.00, 'INR', 30, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21');
 
 -- --------------------------------------------------------
 
@@ -290,9 +340,11 @@ CREATE TABLE `plans_features` (
 --
 
 INSERT INTO `plans_features` (`id`, `plan_id`, `name`, `code`, `description`, `type`, `limit`, `metadata`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 300, NULL, '2019-03-19 09:55:16', '2019-03-19 09:55:16'),
-(2, 2, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 150, NULL, '2019-03-19 09:55:16', '2019-03-19 09:55:16'),
-(3, 3, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 30, NULL, '2019-03-19 09:55:16', '2019-03-19 09:55:16');
+(1, 1, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 300, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
+(2, 2, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 150, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
+(3, 3, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 30, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
+(4, 1, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
+(5, 2, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21');
 
 -- --------------------------------------------------------
 
@@ -342,6 +394,21 @@ CREATE TABLE `plans_usages` (
 CREATE TABLE `providers_categories` (
   `provider_id` int(10) UNSIGNED NOT NULL,
   `category_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `provider_portfolios`
+--
+
+CREATE TABLE `provider_portfolios` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `provider_id` int(10) UNSIGNED NOT NULL,
+  `image_url` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `link` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -509,7 +576,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `image_url`, `mobile_number`, `mobile_verified`, `active`, `confirmation_code`, `confirmed`, `fcm_registration_id`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Admin', 'admin@example.com', '$2y$10$J.3dgtqlcw1uOTnp5wFcGOztliB1627jrql6kMA4A2n1Xs0dcMhpm', NULL, '8888888888', 1, 1, '97a8e16b-c295-4b99-9981-ccc40b36e42a', 1, NULL, NULL, '2019-03-19 09:55:05', '2019-03-19 09:55:05', NULL);
+(1, 'Admin', 'admin@example.com', '$2y$10$mwISj2BfEGC8RcyI62Bwke7t51FfzEQtXAkvYiO0wYdCYXfCSeMKO', NULL, '8888888888', 1, 1, 'c5dcbfde-273f-4149-bf16-92c1c16ed314', 1, NULL, NULL, '2019-05-17 07:01:04', '2019-05-17 07:01:04', NULL);
 
 -- --------------------------------------------------------
 
@@ -642,6 +709,13 @@ ALTER TABLE `providers_categories`
   ADD KEY `provider_categories_foreign_category` (`category_id`);
 
 --
+-- Indexes for table `provider_portfolios`
+--
+ALTER TABLE `provider_portfolios`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `provider_portfolios_foreign_provider_profile` (`provider_id`);
+
+--
 -- Indexes for table `provider_profiles`
 --
 ALTER TABLE `provider_profiles`
@@ -737,7 +811,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `oauth_clients`
@@ -761,7 +835,7 @@ ALTER TABLE `plans`
 -- AUTO_INCREMENT for table `plans_features`
 --
 ALTER TABLE `plans_features`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `plans_subscriptions`
@@ -773,6 +847,12 @@ ALTER TABLE `plans_subscriptions`
 -- AUTO_INCREMENT for table `plans_usages`
 --
 ALTER TABLE `plans_usages`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `provider_portfolios`
+--
+ALTER TABLE `provider_portfolios`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -860,6 +940,12 @@ ALTER TABLE `categories`
 ALTER TABLE `providers_categories`
   ADD CONSTRAINT `provider_categories_foreign_category` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `provider_categories_foreign_provider_profile` FOREIGN KEY (`provider_id`) REFERENCES `provider_profiles` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `provider_portfolios`
+--
+ALTER TABLE `provider_portfolios`
+  ADD CONSTRAINT `provider_portfolios_foreign_provider_profile` FOREIGN KEY (`provider_id`) REFERENCES `provider_profiles` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `provider_profiles`

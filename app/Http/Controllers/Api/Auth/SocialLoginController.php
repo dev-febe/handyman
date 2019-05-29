@@ -7,6 +7,7 @@ use App\Models\Auth\Role\Role;
 use App\Models\Auth\User\SocialAccount;
 use App\Models\Auth\User\User;
 use Firebase\JWT\JWT;
+use Google_Client;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -16,29 +17,73 @@ class SocialLoginController extends Controller
 {
     public function authenticate(Request $request)
     {
-        $publicKeyURL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
-        $kids = json_decode(file_get_contents($publicKeyURL), true);
+        $request->validate([
+            'platform' => 'required|in:google,facebook',
+            'token' => 'required'
+        ]);
 
-        if($request->token) {
-            try {
-                $decoded = JWT::decode($request->token, $kids, array('RS256'));
+        try {
+            $email = null;
 
-                if($decoded->iss !== env('FIREBASE_ISS')) {
-                    throw new \Exception;
-                }
-
-                $user = User::where('email', $decoded->email)->first();
-
-                if(!$user) {
-                    return response()->json(["message" => 'User does not exist'], 404);
-                }
-
-                $token = $user->createToken('Default')->accessToken;
-                return response()->json(["token" => $token, "user" => $user]);
-            } catch(\Exception $ex) {
-                throw new BadRequestHttpException($ex->getMessage());
+            if($request->platform == 'google') {
+                $email = $this->_googleLogin($request->token);
             }
+
+            if($request->platform == 'facebook') {
+                $email = $this->_facebookLogin($request->token);
+            }
+
+            if($email == null) {
+                return response()->json(["message" => 'Email not found from token'], 400);
+            }
+
+            $user = User::where('email', $email)->first();
+
+            if(!$user) {
+                return response()->json(["message" => 'User does not exist'], 404);
+            }
+
+            $token = $user->createToken('Default')->accessToken;
+            return response()->json(["token" => $token, "user" => $user]);
+        } catch(\Exception $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
         }
-        throw new BadRequestHttpException('token_not_provided');
+    }
+
+    private function _googleLogin($token) {
+        $client_id = env('GOOGLE_CLIENT_ID', null);
+
+        if($client_id == null) {
+            throw new \Exception('Google Client ID not configured on server');
+        }
+
+        $client = new Google_Client(['client_id' => $client_id]);  // Specify the CLIENT_ID of the app that accesses the backend
+        $payload = $client->verifyIdToken($token);
+        if ($payload) {
+            return $payload['email'];
+        }
+        throw new \Exception('Invalid Google Token');
+    }
+
+    private function _facebookLogin($token) {
+        // https://github.com/facebook/php-graph-sdk
+        $app_id = env('FACEBOOK_APP_ID', null);
+        $app_secret = env('FACEBOOK_APP_SECRET', null);
+
+        $fb = new \Facebook\Facebook([
+            'app_id' => $app_id,
+            'app_secret' => $app_secret,
+            'default_graph_version' => 'v2.10'
+        ]);
+
+        try {
+            $response = $fb->get('/me', $token);
+            $me = $response->getGraphUser();
+            return $me->getEmail();
+        } catch(\Facebook\Exceptions\FacebookResponseException $e) {
+            throw new \Exception('Graph returned an error: ' . $e->getMessage());
+        } catch(\Facebook\Exceptions\FacebookSDKException $e) {
+            throw new \Exception('Facebook SDK returned an error: ' . $e->getMessage());
+        }
     }
 }
