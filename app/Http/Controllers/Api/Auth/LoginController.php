@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Events\Auth\Registered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CheckUserRequest;
 use App\Http\Requests\Api\LoginRequest;
+use App\Models\Auth\Role\Role;
 use App\Models\Auth\User\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
@@ -57,7 +59,9 @@ class LoginController extends Controller
                 }
 
                 if(!$user->hasRole($request->role)) {
-                    return response()->json(["message" => 'Invalid Role'], 403);
+                    $role = Role::where('name', $request->role)->first();
+                    $user->roles()->attach($role);
+                    event(new Registered($user, $request->role));
                 }
 
                 $token = $user->createToken('Default')->accessToken;

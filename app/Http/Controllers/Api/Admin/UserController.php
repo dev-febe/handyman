@@ -7,6 +7,7 @@ use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Models\Auth\Role\Role;
 use App\Models\Auth\User\User;
+use App\Models\ProviderProfile;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Validator;
@@ -69,15 +70,22 @@ class UserController extends Controller
             'mobile_number' => 'required|unique:users',
             'image' => 'sometimes|image',
             'password' => 'required|min:6',
-            'role' => 'required|exists:roles,id'
+            'role' => 'required|array|exists:roles,id'
         ]);
 
         $user = User::create($request->all());
+        $user->password = bcrypt($request->get('password'));
+        $user->save();
 
         // attach role
-        $user->roles()->attach($request->role);
-
-        event(new Registered($user, Role::find($request->role)->name));
+        foreach ($request->role as $role) {
+            $user->roles()->attach($role);
+            if(Role::find($role)->name == 'provider') {
+                ProviderProfile::create([
+                    'user_id' => $user->id
+                ]);
+            }
+        }
 
         return response()->json($user);
     }
@@ -106,7 +114,7 @@ class UserController extends Controller
             return strtolower($input->mobile_number) != strtolower($user->mobile_number);
         });
 
-        $validator->sometimes('password', 'min:6|confirmed', function ($input) {
+        $validator->sometimes('password', 'min:6', function ($input) {
             return $input->password;
         });
 
@@ -125,11 +133,15 @@ class UserController extends Controller
         $user->save();
 
         //roles
-        if ($request->has('roles')) {
-            $user->roles()->detach();
-
-            if ($request->get('roles')) {
-                $user->roles()->attach($request->get('roles'));
+        $user->roles()->detach();
+        foreach ($request->role as $role) {
+            $user->roles()->attach($role);
+            if(Role::find($role)->name == 'provider') {
+                if(!ProviderProfile::where('user_id', $user->id)->exists()) {
+                    ProviderProfile::create([
+                        'user_id' => $user->id
+                    ]);
+                }
             }
         }
 
