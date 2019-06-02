@@ -77,7 +77,7 @@ class SocialLoginController extends Controller
         ]);
 
         try {
-            $response = $fb->get('/me', $token);
+            $response = $fb->get('/me?fields=name,email', $token);
             $me = $response->getGraphUser();
             return $me->getEmail();
         } catch(\Facebook\Exceptions\FacebookResponseException $e) {
