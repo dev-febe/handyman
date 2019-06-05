@@ -55,6 +55,9 @@ Route::namespace('Api')->name('api.')->group(function () {
             // settings
             Route::get('/settings', 'SettingController@index');
             Route::post('/settings', 'SettingController@update');
+
+            // faq
+            Route::apiResource('faqs', 'FaqController');
         });
     });
 
@@ -72,6 +75,8 @@ Route::namespace('Api')->name('api.')->group(function () {
 
     // system wide settings
     Route::get('/settings', 'SettingController@index')->name('setting.index');
+
+    Route::get('/faq-help', 'FaqController@index')->name('faq.index');
 
     Route::middleware('auth:api')->group(function () {
         Route::get('/user', 'UserController@show')->name('user.show');
