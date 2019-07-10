@@ -449,8 +449,9 @@ textarea.input100 {
     confirmationResult.confirm(code).then(function (result) {
       // User signed in successfully.
       var user = result.user;
-      console.log(result);
-      window.location = window.location.href + '&result=success';
+      user.getIdToken().then(function(idToken){ 
+              window.location = window.location.href + '&result=success&token=' + idToken;
+      });
     }).catch(function (error) {
       console.log("after");
       console.log(error);
