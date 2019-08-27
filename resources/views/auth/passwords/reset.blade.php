@@ -40,9 +40,6 @@
 
                     <div>
                         <button class="btn btn-default submit" type="submit">{{ __('views.auth.passwords.reset.action') }}</button>
-                        <a class="reset_pass" href="{{ route('login') }}">
-                            {{ __('views.auth.passwords.reset.message') }}
-                        </a>
                     </div>
 
                     <div class="clearfix"></div>
