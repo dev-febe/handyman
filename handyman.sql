@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 17, 2019 at 03:05 PM
+-- Generation Time: Sep 01, 2019 at 03:20 PM
 -- Server version: 10.1.33-MariaDB
 -- PHP Version: 7.2.6
 
@@ -70,6 +70,19 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `ST_Distance_Sphere` (`SOURCE` POINT,
 END$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `active_logs`
+--
+
+CREATE TABLE `active_logs` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -144,6 +157,21 @@ CREATE TABLE `categories` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `faq`
+--
+
+CREATE TABLE `faq` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `short_description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -182,7 +210,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (22, '2018_03_07_110053_alter_appointments_add_notes_table', 1),
 (23, '2018_06_07_123211_plans', 1),
 (24, '2019_06_07_123211_plans_metadata', 1),
-(25, '2019_06_10_000001_create_provider_portfolios_table', 1);
+(25, '2019_06_10_000001_create_provider_portfolios_table', 1),
+(26, '2018_03_18_110052_create_faq_table', 2),
+(27, '2019_07_01_000010_create_active_log_table', 3);
 
 -- --------------------------------------------------------
 
@@ -601,6 +631,13 @@ INSERT INTO `users_roles` (`user_id`, `role_id`) VALUES
 --
 
 --
+-- Indexes for table `active_logs`
+--
+ALTER TABLE `active_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `active_logs_foreign_user` (`user_id`);
+
+--
 -- Indexes for table `addresses`
 --
 ALTER TABLE `addresses`
@@ -630,6 +667,12 @@ ALTER TABLE `appointment_status_logs`
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`),
   ADD KEY `categories_foreign_categories` (`parent_id`);
+
+--
+-- Indexes for table `faq`
+--
+ALTER TABLE `faq`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `migrations`
@@ -784,6 +827,12 @@ ALTER TABLE `users_roles`
 --
 
 --
+-- AUTO_INCREMENT for table `active_logs`
+--
+ALTER TABLE `active_logs`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
@@ -808,10 +857,16 @@ ALTER TABLE `categories`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `faq`
+--
+ALTER TABLE `faq`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `oauth_clients`
@@ -906,6 +961,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `active_logs`
+--
+ALTER TABLE `active_logs`
+  ADD CONSTRAINT `active_logs_foreign_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `addresses`

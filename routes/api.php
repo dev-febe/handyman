@@ -58,6 +58,12 @@ Route::namespace('Api')->name('api.')->group(function () {
 
             // faq
             Route::apiResource('faqs', 'FaqController');
+
+            // dashboard
+            Route::get('/dashboard/appointment-analytics', 'DashboardController@appointmentAnalytics');
+            Route::get('/dashboard/user-analytics', 'DashboardController@userAnalytics');
+            Route::get('/dashboard/category-summary', 'DashboardController@categorySummary');
+            Route::get('/dashboard/daily-active-analytics', 'DashboardController@dailyUserAnalytics');
         });
     });
 
