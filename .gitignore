@@ -39,3 +39,5 @@ _ide_helper.php
 
 public/storage
 public/*.zip
+
+stats/

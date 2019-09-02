@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Rennokki\Plans\Models\PlanModel;
 use Rinvex\Subscriptions\Models\Plan;
+use Illuminate\Support\Facades\DB;
 use Validator;
 
 
