@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActiveLog;
 use App\Models\Appointment;
 use App\Models\Auth\Role\Role;
 use App\Models\Auth\User\User;
