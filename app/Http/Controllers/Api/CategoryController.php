@@ -17,7 +17,10 @@ class CategoryController extends Controller
     {
         if($request->category_id) {
             $categories = Category::where('parent_id', $request->category_id);
-        } else {
+	} else if($request->search_subcategory) {
+	    // search in subcategory
+	    $categories = Category::where('title', 'like', "%" . $request->search_subcategory . "%")->whereNotNull('parent_id');
+	} else {
             $categories = Category::whereNull('parent_id');
         }
 
