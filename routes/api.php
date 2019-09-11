@@ -99,6 +99,7 @@ Route::namespace('Api')->name('api.')->group(function () {
         Route::namespace('Customer')->prefix('customer')->name('customer.')->group(function () {
 
             /* provider related */
+            Route::get('/users/provider/{user}', 'ProviderController@providerByUserId')->name('provider.providerByUserId');
             Route::get('/providers', 'ProviderController@index')->name('provider.index');
             Route::get('/providers/{provider}', 'ProviderController@show')->name('provider.show');
             Route::get('/providers/{provider}/rating-summary', 'ProviderController@ratingSummary')->name('provider.ratingsSummary');

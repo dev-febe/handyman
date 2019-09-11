@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Customer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Customer\RatingCreateRequest;
 use App\Http\Requests\Api\Customer\ProviderProfileListRequest;
+use App\Models\Auth\User\User;
 use App\Models\ProviderProfile;
 use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
@@ -53,5 +54,10 @@ class ProviderController extends Controller
                 ->get(),
             "total_completed" => $provider->appointments()->where('status', 'complete')->count()
         ]);
+    }
+
+    public function providerByUserId(User $user)
+    {
+        return response()->json($user->provider);
     }
 }
