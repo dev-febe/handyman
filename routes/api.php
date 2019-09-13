@@ -85,6 +85,9 @@ Route::namespace('Api')->name('api.')->group(function () {
     Route::get('/faq-help', 'FaqController@index')->name('faq.index');
 
     Route::middleware('auth:api')->group(function () {
+        // activity log
+        Route::post('/activity-log', 'ActiveLogController@store')->name('activitylog.store');
+
         Route::get('/user', 'UserController@show')->name('user.show');
         Route::put('/user', 'UserController@update')->name('user.update');
 
