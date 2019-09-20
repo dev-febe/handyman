@@ -27,7 +27,7 @@ class DashboardController  extends Controller
             ->get();
 
         foreach ($categorySummary as $summary) {
-            $summary['primary_category_id'] = Category::find($summary['primary_category_id'])->title;
+            $summary->primary_category_id = Category::find($summary->primary_category_id)->title;
         }
 
         return response()->json([
