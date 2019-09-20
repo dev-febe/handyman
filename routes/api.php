@@ -55,6 +55,8 @@ Route::namespace('Api')->name('api.')->group(function () {
             // settings
             Route::get('/settings', 'SettingController@index');
             Route::post('/settings', 'SettingController@update');
+            Route::get('/settings/env', 'SettingController@envList');
+            Route::post('/settings/env', 'SettingController@updateEnv');
 
             // faq
             Route::apiResource('faqs', 'FaqController');
