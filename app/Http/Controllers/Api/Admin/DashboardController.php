@@ -7,6 +7,7 @@ use App\Models\ActiveLog;
 use App\Models\Appointment;
 use App\Models\Auth\Role\Role;
 use App\Models\Auth\User\User;
+use App\Models\Category;
 use App\Models\Support;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -24,6 +25,10 @@ class DashboardController  extends Controller
             ->whereNotNull('primary_category_id')
             ->groupBy('primary_category_id')
             ->get();
+
+        foreach ($categorySummary as $summary) {
+            $summary['primary_category_id'] = Category::find($summary['primary_category_id'])->title;
+        }
 
         return response()->json([
             "summary" => $categorySummary
@@ -99,6 +104,10 @@ class DashboardController  extends Controller
     }
 
     private function mapDayName($date) {
+        return $date->format("D");
+    }
+
+    private function mapCategoryName($date) {
         return $date->format("D");
     }
 }
