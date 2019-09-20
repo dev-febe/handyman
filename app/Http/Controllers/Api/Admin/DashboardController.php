@@ -67,11 +67,19 @@ class DashboardController  extends Controller
 
         $chartLabel = array_map([$this, "mapDayName"], $usersChartData->pluck('created_at')->toArray());
 
+        $summary = [
+            ["title" => "Total", "value" => User::whereRaw("1=1")->count()],
+            ["title" => "Last Month", "value" => User::whereDate('created_at', '>', Carbon::now()->subDays(30))->count()],
+            ["title" => "Last Week", "value" => User::whereDate('created_at', '>', Carbon::now()->subDays(7))->count()],
+            ["title" => "Today", "value" => User::whereDate('created_at', '=', Carbon::now())->count()]
+        ];
+
         return response()->json([
             "chart" => [
                 "chartLabel" => $chartLabel,
                 "linesData" => [$usersChartData->pluck("total")]
             ],
+            "summary" => $summary
         ]);
 
     }
