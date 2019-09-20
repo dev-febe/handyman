@@ -56,22 +56,22 @@ class SettingController extends Controller
         $env = new Env();
         try {
             $env->changeEnv([
-                'MAIL_DRIVER'   => $request->mail_driver,
-                'MAIL_HOST'   => $request->mail_host,
-                'MAIL_PORT'   => $request->mail_port,
-                'MAIL_USERNAME'   => $request->mail_username,
-                'MAIL_PASSWORD'   => $request->mail_password,
-                'MAIL_FROM_ADDRESS'   => $request->mail_from_address,
-                'MAIL_FROM_NAME'   => $request->mail_from_name,
-                'MAILGUN_DOMAIN'   => $request->mailgun_domain,
-                'MAILGUN_SECRET'   => $request->mailgun_secret,
-                'FCM_SERVER_KEY'   => $request->fcm_server_key,
-                'FCM_SENDER_ID'   => $request->fcm_sender_id,
-                'ONESIGNAL_APP_ID'   => $request->onesignal_app_id,
-                'ONESIGNAL_REST_API'   => $request->onesignal_rest_api,
-                'APP_TIMEZONE'   => $request->app_timezone,
-                'STRIPE_KEY'   => $request->stripe_key,
-                'STRIPE_SECRET'   => $request->stripe_secret,
+                'MAIL_DRIVER'   => $request->MAIL_DRIVER,
+                'MAIL_HOST'   => $request->MAIL_HOST,
+                'MAIL_PORT'   => $request->MAIL_PORT,
+                'MAIL_USERNAME'   => $request->MAIL_USERNAME,
+                'MAIL_PASSWORD'   => $request->MAIL_PASSWORD,
+                'MAIL_FROM_ADDRESS'   => $request->MAIL_FROM_ADDRESS,
+                'MAIL_FROM_NAME'   => $request->MAIL_FROM_NAME,
+                'MAILGUN_DOMAIN'   => $request->MAILGUN_DOMAIN,
+                'MAILGUN_SECRET'   => $request->MAILGUN_SECRET,
+                'FCM_SERVER_KEY'   => $request->FCM_SERVER_KEY,
+                'FCM_SENDER_ID'   => $request->FCM_SENDER_ID,
+                'ONESIGNAL_APP_ID'   => $request->ONESIGNAL_APP_ID,
+                'ONESIGNAL_REST_API'   => $request->ONESIGNAL_REST_API,
+                'APP_TIMEZONE'   => $request->APP_TIMEZONE,
+                'STRIPE_KEY'   => $request->STRIPE_KEY,
+                'STRIPE_SECRET'   => $request->STRIPE_SECRET,
             ]);
         } catch (DotEnvException $e) {
         }
