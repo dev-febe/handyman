@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Auth;
 
+use App\Helpers\Language;
 use OneSignal;
 use App\Events\NewAppointment;
 use App\Helpers\PushNotificationHelper;
@@ -36,10 +37,14 @@ class NewAppointmentListener
             $this->appointment = $event->appointment;
 
             if($this->appointment->provider->user->fcm_registration_id) {
-                OneSignal::sendNotificationToUser('New Appointment',
+
+                $languageCode = $this->appointment->provider->user->language;
+                $language = new Language($languageCode);
+
+                OneSignal::sendNotificationToUser($language->get('appointment_new_title'),
                     $this->appointment->provider->user->fcm_registration_id,
                     null,
-                    ["title" => "New Appointment", "body" => 'You have recieved new appointment for service', "appoinment_id" => $this->appointment->id]);
+                    ["title" => $language->get('appointment_new_title'), "body" => $language->get('appointment_new_body'), "appoinment_id" => $this->appointment->id]);
             }
 
         } catch (\Exception $ex) {

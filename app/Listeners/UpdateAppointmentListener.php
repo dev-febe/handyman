@@ -37,53 +37,58 @@ class UpdateAppointmentListener
             $this->appointment = $event->appointment;
             $this->rescheduled = $event->rescheduled;
 
+            $clientLanguageCode = $this->appointment->user->language;
+            $providerLanguageCode = $this->appointment->provider->user->language;
+            $clientLanguage = new Language($clientLanguageCode);
+            $providerLanguage = new Language($providerLanguageCode);
+
             if($this->rescheduled) {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    OneSignal::sendNotificationToUser('Appointment Rescheduled',
+                    OneSignal::sendNotificationToUser($clientLanguage->get('appointment_rescheduled_title'),
                         $this->appointment->user->fcm_registration_id,
                         null,
-                        ["title" => "Appointment Rescheduled", "body" => 'Your appointment with provider is rescheduled', "appoinment_id" => $this->appointment->id]);
+                        ["title" => $clientLanguage->get('appointment_rescheduled_title'), "body" => $clientLanguage->get('appointment_rescheduled_body'), "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "cancelled") {
                 if($this->appointment->provider->user->fcm_registration_id) {
                     // send notification to provider
-                    OneSignal::sendNotificationToUser('Appointment Cancelled',
+                    OneSignal::sendNotificationToUser($providerLanguage->get('appointment_cancelled_title'),
                         $this->appointment->provider->user->fcm_registration_id,
                         null,
-                        ["title" => "Appointment Cancelled", "body" => 'Client has cancelled the appointment', "appoinment_id" => $this->appointment->id]);
+                        ["title" => $providerLanguage->get('appointment_cancelled_title'), "body" => $providerLanguage->get('appointment_cancelled_body'), "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "rejected") {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    OneSignal::sendNotificationToUser('Appointment Rejected',
+                    OneSignal::sendNotificationToUser($clientLanguage->get('appointment_rejected_title'),
                         $this->appointment->user->fcm_registration_id,
                         null,
-                        ["title" => "Appointment Rejected", "body" => 'Provider has rejected the appointment', "appoinment_id" => $this->appointment->id]);
+                        ["title" => $clientLanguage->get('appointment_rejected_title'), "body" => $clientLanguage->get('appointment_rejected_body'), "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "accepted") {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    OneSignal::sendNotificationToUser('Appointment Accepted',
+                    OneSignal::sendNotificationToUser($clientLanguage->get('appointment_accepted_title'),
                         $this->appointment->user->fcm_registration_id,
                         null,
-                        ["title" => "Appointment Accepted", "body" => 'Provider has accepted the appointment', "appoinment_id" => $this->appointment->id]);
+                        ["title" => $clientLanguage->get('appointment_accepted_title'), "body" => $clientLanguage->get('appointment_accepted_body'), "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "ongoing") {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    OneSignal::sendNotificationToUser('Appointment Started',
+                    OneSignal::sendNotificationToUser($clientLanguage->get('appointment_ongoing_title'),
                         $this->appointment->user->fcm_registration_id,
                         null,
-                        ["title" => "Appointment Started", "body" => 'Provider has started the appointment', "appoinment_id" => $this->appointment->id]);
+                        ["title" => $clientLanguage->get('appointment_ongoing_title'), "body" => $clientLanguage->get('appointment_ongoing_body'), "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "complete") {
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
-                    OneSignal::sendNotificationToUser('Appointment Complete',
+                    OneSignal::sendNotificationToUser($clientLanguage->get('appointment_complete_title'),
                         $this->appointment->user->fcm_registration_id,
                         null,
-                        ["title" => "Appointment Complete", "body" => 'Your appointment with provider is complete', "appoinment_id" => $this->appointment->id]);
+                        ["title" => $clientLanguage->get('appointment_complete_title'), "body" => $clientLanguage->get('appointment_complete_body'), "appoinment_id" => $this->appointment->id]);
                 }
             }
 

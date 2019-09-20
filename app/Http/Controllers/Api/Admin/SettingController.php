@@ -6,6 +6,8 @@ use App\Models\Setting;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Brotzka\DotenvEditor\DotenvEditor as Env;
+use Brotzka\DotenvEditor\Exceptions\DotEnvException;
 
 class SettingController extends Controller
 {
@@ -35,5 +37,50 @@ class SettingController extends Controller
         }
 
         return response()->json([]);
+    }
+
+    public function envList(Request $request)
+    {
+        $env = new Env();
+        return response()->json($env->getContent());
+    }
+
+    /**
+     * Update env variables.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function updateEnv(Request $request)
+    {
+        $env = new Env();
+        try {
+            $env->changeEnv([
+                'MAIL_DRIVER'   => $request->mail_driver,
+                'MAIL_HOST'   => $request->mail_host,
+                'MAIL_PORT'   => $request->mail_port,
+                'MAIL_USERNAME'   => $request->mail_username,
+                'MAIL_PASSWORD'   => $request->mail_password,
+                'MAIL_FROM_ADDRESS'   => $request->mail_from_address,
+                'MAIL_FROM_NAME'   => $request->mail_from_name,
+                'MAILGUN_DOMAIN'   => $request->mailgun_domain,
+                'MAILGUN_SECRET'   => $request->mailgun_secret,
+                'FCM_SERVER_KEY'   => $request->fcm_server_key,
+                'FCM_SENDER_ID'   => $request->fcm_sender_id,
+                'ONESIGNAL_APP_ID'   => $request->onesignal_app_id,
+                'ONESIGNAL_REST_API'   => $request->onesignal_rest_api,
+                'APP_TIMEZONE'   => $request->app_timezone,
+                'STRIPE_KEY'   => $request->stripe_key,
+                'STRIPE_SECRET'   => $request->stripe_secret,
+            ]);
+        } catch (DotEnvException $e) {
+        }
+
+        return response()->json([]);
+    }
+
+    public function timezoneList()
+    {
+        return response()->json(timezone_identifiers_list());
     }
 }

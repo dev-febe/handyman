@@ -22,7 +22,25 @@ class SettingsTableSeeder extends Seeder
             ["key" => "privacy_policy", "value" => "Demo privacy policy"],
             ["key" => "about_us", "value" => "Demo privacy policy"],
             ["key" => "faq", "value" => "Demo FAQ"],
-            ["key" => "terms", "value" => "Demo Terms and Condition"]
+            ["key" => "terms", "value" => "Demo Terms and Condition"],
+            ["key" => "language", "value" => '{
+   "en":{
+      "appointment_new_title":"New Appointment",
+      "appointment_new_body":"You have recieved new appointment for service",
+      "appointment_rescheduled_title":"Appointment Rescheduled",
+      "appointment_rescheduled_body":"Your appointment with provider is rescheduled",
+      "appointment_cancelled_title":"Appointment Cancelled",
+      "appointment_cancelled_body":"Client has cancelled the appointment",
+      "appointment_rejected_title":"Appointment Rejected",
+      "appointment_rejected_body":"Provider has rejected the appointment",
+      "appointment_accepted_title":"Appointment Accepted",
+      "appointment_accepted_body":"Provider has accepted the appointment",
+      "appointment_ongoing_title":"Appointment Started",
+      "appointment_ongoing_body":"Provider has started the appointment",
+      "appointment_complete_title":"Appointment Complete",
+      "appointment_complete_body":"Your appointment with provider is complete"
+   }
+}'],
         ]);
     }
 }
