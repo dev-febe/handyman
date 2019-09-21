@@ -26,7 +26,7 @@ class UsersSeeder extends Seeder
                 'name' => 'Admin',
                 'email' => 'admin@example.com',
                 'password' => bcrypt('admin'),
-                'mobile_number' => '8888888888',
+                'mobile_number' => '1212121212',
                 'mobile_verified' => true,
                 'active' => true,
                 'confirmation_code' => \Ramsey\Uuid\Uuid::uuid4(),
