@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 01, 2019 at 03:20 PM
+-- Generation Time: Sep 26, 2019 at 12:14 PM
 -- Server version: 10.1.33-MariaDB
 -- PHP Version: 7.2.6
 
@@ -208,11 +208,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (20, '2018_03_07_110052_alter_addresses_table', 1),
 (21, '2018_03_07_110052_alter_appointments_table', 1),
 (22, '2018_03_07_110053_alter_appointments_add_notes_table', 1),
-(23, '2018_06_07_123211_plans', 1),
-(24, '2019_06_07_123211_plans_metadata', 1),
-(25, '2019_06_10_000001_create_provider_portfolios_table', 1),
-(26, '2018_03_18_110052_create_faq_table', 2),
-(27, '2019_07_01_000010_create_active_log_table', 3);
+(23, '2018_03_18_110052_create_faq_table', 1),
+(24, '2018_06_07_123211_plans', 1),
+(25, '2019_06_07_123211_plans_metadata', 1),
+(26, '2019_06_10_000001_create_provider_portfolios_table', 1),
+(27, '2019_07_01_000010_create_active_log_table', 1);
 
 -- --------------------------------------------------------
 
@@ -222,7 +222,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `oauth_access_tokens` (
   `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
   `client_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `scopes` text COLLATE utf8mb4_unicode_ci,
@@ -240,7 +240,7 @@ CREATE TABLE `oauth_access_tokens` (
 
 CREATE TABLE `oauth_auth_codes` (
   `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
   `client_id` int(10) UNSIGNED NOT NULL,
   `scopes` text COLLATE utf8mb4_unicode_ci,
   `revoked` tinyint(1) NOT NULL,
@@ -255,7 +255,7 @@ CREATE TABLE `oauth_auth_codes` (
 
 CREATE TABLE `oauth_clients` (
   `id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `secret` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `redirect` text COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -271,8 +271,8 @@ CREATE TABLE `oauth_clients` (
 --
 
 INSERT INTO `oauth_clients` (`id`, `user_id`, `name`, `secret`, `redirect`, `personal_access_client`, `password_client`, `revoked`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Handyman Personal Access Client', 't8MwD3onvCwFTOoiok2JeKFGZ3kNhGyAot3vJZ9P', 'http://localhost', 1, 0, 0, '2019-05-17 07:01:32', '2019-05-17 07:01:32'),
-(2, NULL, 'Handyman Password Grant Client', 'mQQJrHUWFDGQL5BggEwHkiOpQoy6pn3Mz3aIcjP2', 'http://localhost', 0, 1, 0, '2019-05-17 07:01:32', '2019-05-17 07:01:32');
+(1, NULL, 'Handyman Personal Access Client', 'Ubdf1actzuhNOEJsXxYwipysssgINBenGCGFN7gC', 'http://localhost', 1, 0, 0, '2019-09-26 04:43:23', '2019-09-26 04:43:23'),
+(2, NULL, 'Handyman Password Grant Client', 'FTri0xQQlLrrKfOZsnC8fF9NCVFzPXm54N9sSUzR', 'http://localhost', 0, 1, 0, '2019-09-26 04:43:23', '2019-09-26 04:43:23');
 
 -- --------------------------------------------------------
 
@@ -292,7 +292,7 @@ CREATE TABLE `oauth_personal_access_clients` (
 --
 
 INSERT INTO `oauth_personal_access_clients` (`id`, `client_id`, `created_at`, `updated_at`) VALUES
-(1, 1, '2019-05-17 07:01:32', '2019-05-17 07:01:32');
+(1, 1, '2019-09-26 04:43:23', '2019-09-26 04:43:23');
 
 -- --------------------------------------------------------
 
@@ -342,9 +342,9 @@ CREATE TABLE `plans` (
 --
 
 INSERT INTO `plans` (`id`, `name`, `description`, `price`, `currency`, `duration`, `metadata`, `created_at`, `updated_at`) VALUES
-(1, 'Premium', 'Get 10 leads per day for a month.', 50.00, 'INR', 30, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
-(2, 'Economy', 'Get 5 leads per day for a month.', 30.00, 'INR', 30, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
-(3, 'Basic', 'Get 1 leads for a month.', 30.00, 'INR', 30, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21');
+(1, 'Premium', 'Get 10 leads per day for a month.', 50.00, 'INR', 30, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
+(2, 'Economy', 'Get 5 leads per day for a month.', 30.00, 'INR', 30, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
+(3, 'Basic', 'Get 1 leads for a month.', 30.00, 'INR', 30, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45');
 
 -- --------------------------------------------------------
 
@@ -370,11 +370,11 @@ CREATE TABLE `plans_features` (
 --
 
 INSERT INTO `plans_features` (`id`, `plan_id`, `name`, `code`, `description`, `type`, `limit`, `metadata`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 300, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
-(2, 2, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 150, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
-(3, 3, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 30, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
-(4, 1, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21'),
-(5, 2, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2019-05-17 07:01:21', '2019-05-17 07:01:21');
+(1, 1, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 300, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
+(2, 2, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 150, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
+(3, 3, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 30, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
+(4, 1, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
+(5, 2, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45');
 
 -- --------------------------------------------------------
 
@@ -528,7 +528,8 @@ INSERT INTO `settings` (`id`, `key`, `value`) VALUES
 (7, 'privacy_policy', 'Demo privacy policy'),
 (8, 'about_us', 'Demo privacy policy'),
 (9, 'faq', 'Demo FAQ'),
-(10, 'terms', 'Demo Terms and Condition');
+(10, 'terms', 'Demo Terms and Condition'),
+(11, 'language', '{\n   \"en\":{\n      \"appointment_new_title\":\"New Appointment\",\n      \"appointment_new_body\":\"You have recieved new appointment for service\",\n      \"appointment_rescheduled_title\":\"Appointment Rescheduled\",\n      \"appointment_rescheduled_body\":\"Your appointment with provider is rescheduled\",\n      \"appointment_cancelled_title\":\"Appointment Cancelled\",\n      \"appointment_cancelled_body\":\"Client has cancelled the appointment\",\n      \"appointment_rejected_title\":\"Appointment Rejected\",\n      \"appointment_rejected_body\":\"Provider has rejected the appointment\",\n      \"appointment_accepted_title\":\"Appointment Accepted\",\n      \"appointment_accepted_body\":\"Provider has accepted the appointment\",\n      \"appointment_ongoing_title\":\"Appointment Started\",\n      \"appointment_ongoing_body\":\"Provider has started the appointment\",\n      \"appointment_complete_title\":\"Appointment Complete\",\n      \"appointment_complete_body\":\"Your appointment with provider is complete\"\n   }\n}');
 
 -- --------------------------------------------------------
 
@@ -595,6 +596,7 @@ CREATE TABLE `users` (
   `confirmation_code` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `confirmed` tinyint(1) NOT NULL DEFAULT '1',
   `fcm_registration_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `language` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'en',
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -605,8 +607,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `image_url`, `mobile_number`, `mobile_verified`, `active`, `confirmation_code`, `confirmed`, `fcm_registration_id`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Admin', 'admin@example.com', '$2y$10$mwISj2BfEGC8RcyI62Bwke7t51FfzEQtXAkvYiO0wYdCYXfCSeMKO', NULL, '8888888888', 1, 1, 'c5dcbfde-273f-4149-bf16-92c1c16ed314', 1, NULL, NULL, '2019-05-17 07:01:04', '2019-05-17 07:01:04', NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `image_url`, `mobile_number`, `mobile_verified`, `active`, `confirmation_code`, `confirmed`, `fcm_registration_id`, `language`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Admin', 'admin@example.com', '$2y$10$b3huhe4aJ5A.pg4fI3N7ce2r97.yT9wDH8RxaCzrl1P9CWYRpDlw.', NULL, '1212121212', 1, 1, '773eff8e-c1e5-4d3b-9e0e-7d0af8d1d8f8', 1, NULL, 'en', NULL, '2019-09-26 04:43:18', '2019-09-26 04:43:18', NULL);
 
 -- --------------------------------------------------------
 
@@ -932,7 +934,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `social_accounts`

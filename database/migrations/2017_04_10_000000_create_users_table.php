@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->uuid('confirmation_code')->nullable();
             $table->boolean('confirmed')->default(config('access.users.confirm_email') ? false : true);
             $table->string('fcm_registration_id')->nullable();
+            $table->string('language')->default('en');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
