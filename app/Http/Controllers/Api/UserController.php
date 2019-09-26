@@ -39,6 +39,10 @@ class UserController extends Controller
             $user->image_url = $request->image_url;
         }
 
+        if($request->language) {
+            $user->language = $request->language;
+        }
+
         $user->save();
 
         return response()->json($user);
