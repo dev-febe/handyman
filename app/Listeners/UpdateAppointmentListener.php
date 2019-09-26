@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Auth;
 
+use App\Helpers\Language;
 use OneSignal;
 use App\Events\UpdateAppointment;
 use App\Helpers\PushNotificationHelper;
