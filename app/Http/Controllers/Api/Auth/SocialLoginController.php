@@ -19,14 +19,15 @@ class SocialLoginController extends Controller
     {
         $request->validate([
             'platform' => 'required|in:google,facebook',
-            'token' => 'required'
+	    'token' => 'required',
+	    'os' => 'sometimes|in:android,os'
         ]);
 
         try {
             $email = null;
 
             if($request->platform == 'google') {
-                $email = $this->_googleLogin($request->token);
+                $email = $this->_googleLogin($request->token, $request->get('os', 'android'));
             }
 
             if($request->platform == 'facebook') {
@@ -50,8 +51,9 @@ class SocialLoginController extends Controller
         }
     }
 
-    private function _googleLogin($token) {
-        $client_id = env('GOOGLE_CLIENT_ID', null);
+    private function _googleLogin($token, $os) {
+	$client_id_env_key = $os == 'android' ? 'GOOGLE_CLIENT_ID' : 'GOOGLE_IOS_CLIENT_ID';
+        $client_id = env($client_id_env_key, null);
 
         if($client_id == null) {
             throw new \Exception('Google Client ID not configured on server');
