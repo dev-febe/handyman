@@ -80,7 +80,7 @@ class User extends Authenticatable
      */
     protected $fillable = ['name', 'email', 'password', 'active', 'confirmation_code', 'confirmed',
         'mobile_number', 'otp_code', 'mobile_verified', 'fcm_registration_id', 'image_url',
-        'language'];
+        'language', 'fcm_registration_id_provider'];
 
     /**
      * The attributes that should be hidden for arrays.

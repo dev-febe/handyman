@@ -35,6 +35,10 @@ class UserController extends Controller
             $user->fcm_registration_id = $request->fcm_registration_id;
         }
 
+        if($request->fcm_registration_id_provider) {
+            $user->fcm_registration_id_provider = $request->fcm_registration_id_provider;
+        }
+
         if($request->image_url) {
             $user->image_url = $request->image_url;
         }

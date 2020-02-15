@@ -41,7 +41,8 @@ class NewAppointmentListener
                 $languageCode = $this->appointment->provider->user->language;
                 $language = new Language($languageCode);
 
-                OneSignal::sendNotificationToUser($language->get('appointment_new_title'),
+                $oneSignal = PushNotificationHelper::getOneSignalInstance("provider");
+                $oneSignal->sendNotificationToUser($language->get('appointment_new_title'),
                     $this->appointment->provider->user->fcm_registration_id,
                     null,
                     ["title" => $language->get('appointment_new_title'), "body" => $language->get('appointment_new_body'), "appoinment_id" => $this->appointment->id]);
