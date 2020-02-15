@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.1
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 26, 2019 at 12:14 PM
--- Server version: 10.1.33-MariaDB
--- PHP Version: 7.2.6
+-- Generation Time: Feb 15, 2020 at 02:14 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.2.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,55 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `handyman`
 --
-
-DELIMITER $$
---
--- Functions
---
-CREATE FUNCTION `ST_Distance_Sphere` (`SOURCE` POINT, `DEST` POINT) RETURNS FLOAT BEGIN
-    DECLARE radlat1 FLOAT;
-    DECLARE radlat2 FLOAT;
-    DECLARE radlon1 FLOAT;
-    DECLARE radlon2 FLOAT;
-    DECLARE theta FLOAT;
-    DECLARE radtheta FLOAT;
-    DECLARE dist FLOAT;
-    DECLARE PI FLOAT;
-    DECLARE Q_LAT FLOAT;
-    DECLARE Q_LONG FLOAT;
-    DECLARE NAV_LAT FLOAT;
-    DECLARE NAV_LONG FLOAT;
-
-    SET PI = PI();
-    SET dist = 0;
-    SET Q_LONG = ST_X(SOURCE);
-    SET Q_LAT = ST_Y(SOURCE);
-    SET NAV_LONG = ST_X(DEST);
-    SET NAV_LAT = ST_Y(DEST);
-
-    IF ((Q_LAT IS NULL OR Q_LAT = 0) OR (Q_LONG IS NULL OR Q_LONG = 0)
-        OR (NAV_LAT IS NULL OR NAV_LAT = 0) OR (NAV_LONG IS NULL OR NAV_LONG = 0)) THEN
-        RETURN dist;
-    ELSE
-        SET radlat1 = PI * (Q_LAT/180);
-        SET radlat2 = PI * (NAV_LAT/180);
-        SET radlon1 = PI * (Q_LONG/180);
-        SET radlon2 = PI * (NAV_LONG/180);
-        SET theta = Q_LONG-NAV_LONG;
-        SET radtheta = PI * (theta/180);
-        SET dist = SIN(radlat1) * SIN(radlat2) + COS(radlat1) * COS(radlat2) * COS(radtheta);
-        SET dist = ACOS(dist);
-        SET dist = dist * (180/PI);
-        SET dist = dist * 60 * 1.1515;
-        SET dist = dist * 1.609344;
-
-        SET dist = CEILING(dist);
-
-    RETURN dist;
-    END IF;
-END$$
-
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -94,8 +45,8 @@ CREATE TABLE `addresses` (
   `id` int(10) UNSIGNED NOT NULL,
   `title` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `longitude` decimal(15,7) NOT NULL DEFAULT '0.0000000',
-  `latitude` decimal(15,7) NOT NULL DEFAULT '0.0000000',
+  `longitude` decimal(15,7) NOT NULL DEFAULT 0.0000000,
+  `latitude` decimal(15,7) NOT NULL DEFAULT 0.0000000,
   `user_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -212,7 +163,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (24, '2018_06_07_123211_plans', 1),
 (25, '2019_06_07_123211_plans_metadata', 1),
 (26, '2019_06_10_000001_create_provider_portfolios_table', 1),
-(27, '2019_07_01_000010_create_active_log_table', 1);
+(27, '2019_07_01_000010_create_active_log_table', 1),
+(28, '2019_07_01_000015_alter_users_table', 2);
 
 -- --------------------------------------------------------
 
@@ -225,7 +177,7 @@ CREATE TABLE `oauth_access_tokens` (
   `user_id` bigint(20) DEFAULT NULL,
   `client_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `scopes` text COLLATE utf8mb4_unicode_ci,
+  `scopes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `revoked` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -242,7 +194,7 @@ CREATE TABLE `oauth_auth_codes` (
   `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `client_id` int(10) UNSIGNED NOT NULL,
-  `scopes` text COLLATE utf8mb4_unicode_ci,
+  `scopes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `revoked` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -328,11 +280,11 @@ CREATE TABLE `password_resets` (
 CREATE TABLE `plans` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `price` double(8,2) NOT NULL,
   `currency` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `duration` int(11) NOT NULL DEFAULT '30',
-  `metadata` mediumtext COLLATE utf8mb4_unicode_ci,
+  `duration` int(11) NOT NULL DEFAULT 30,
+  `metadata` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -357,10 +309,10 @@ CREATE TABLE `plans_features` (
   `plan_id` int(11) NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `type` enum('feature','limit') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'feature',
-  `limit` int(11) NOT NULL DEFAULT '0',
-  `metadata` mediumtext COLLATE utf8mb4_unicode_ci,
+  `limit` int(11) NOT NULL DEFAULT 0,
+  `metadata` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -388,11 +340,11 @@ CREATE TABLE `plans_subscriptions` (
   `model_id` int(11) NOT NULL,
   `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `payment_method` enum('stripe') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_paid` tinyint(1) NOT NULL DEFAULT '0',
+  `is_paid` tinyint(1) NOT NULL DEFAULT 0,
   `charging_price` double(8,2) DEFAULT NULL,
   `charging_currency` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_recurring` tinyint(1) NOT NULL DEFAULT '1',
-  `recurring_each_days` int(11) NOT NULL DEFAULT '30',
+  `is_recurring` tinyint(1) NOT NULL DEFAULT 1,
+  `recurring_each_days` int(11) NOT NULL DEFAULT 30,
   `starts_on` timestamp NULL DEFAULT NULL,
   `expires_on` timestamp NULL DEFAULT NULL,
   `cancelled_on` timestamp NULL DEFAULT NULL,
@@ -410,7 +362,7 @@ CREATE TABLE `plans_usages` (
   `id` int(10) UNSIGNED NOT NULL,
   `subscription_id` int(11) NOT NULL,
   `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `used` double(9,2) NOT NULL DEFAULT '0.00',
+  `used` double(9,2) NOT NULL DEFAULT 0.00,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -451,15 +403,15 @@ CREATE TABLE `provider_profiles` (
   `id` int(10) UNSIGNED NOT NULL,
   `primary_category_id` int(10) UNSIGNED DEFAULT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
-  `is_verified` tinyint(1) NOT NULL DEFAULT '0',
+  `is_verified` tinyint(1) NOT NULL DEFAULT 0,
   `document_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `image_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `price` double DEFAULT NULL,
   `price_type` enum('visit','hour') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `longitude` decimal(15,7) NOT NULL DEFAULT '0.0000000',
-  `latitude` decimal(15,7) NOT NULL DEFAULT '0.0000000',
-  `about` text COLLATE utf8mb4_unicode_ci,
+  `longitude` decimal(15,7) NOT NULL DEFAULT 0.0000000,
+  `latitude` decimal(15,7) NOT NULL DEFAULT 0.0000000,
+  `about` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -489,7 +441,7 @@ CREATE TABLE `ratings` (
 CREATE TABLE `roles` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `weight` smallint(5) UNSIGNED NOT NULL DEFAULT '0'
+  `weight` smallint(5) UNSIGNED NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -529,7 +481,7 @@ INSERT INTO `settings` (`id`, `key`, `value`) VALUES
 (8, 'about_us', 'Demo privacy policy'),
 (9, 'faq', 'Demo FAQ'),
 (10, 'terms', 'Demo Terms and Condition'),
-(11, 'language', '{\n   \"en\":{\n      \"appointment_new_title\":\"New Appointment\",\n      \"appointment_new_body\":\"You have recieved new appointment for service\",\n      \"appointment_rescheduled_title\":\"Appointment Rescheduled\",\n      \"appointment_rescheduled_body\":\"Your appointment with provider is rescheduled\",\n      \"appointment_cancelled_title\":\"Appointment Cancelled\",\n      \"appointment_cancelled_body\":\"Client has cancelled the appointment\",\n      \"appointment_rejected_title\":\"Appointment Rejected\",\n      \"appointment_rejected_body\":\"Provider has rejected the appointment\",\n      \"appointment_accepted_title\":\"Appointment Accepted\",\n      \"appointment_accepted_body\":\"Provider has accepted the appointment\",\n      \"appointment_ongoing_title\":\"Appointment Started\",\n      \"appointment_ongoing_body\":\"Provider has started the appointment\",\n      \"appointment_complete_title\":\"Appointment Complete\",\n      \"appointment_complete_body\":\"Your appointment with provider is complete\"\n   }\n}');
+(11, 'language', '{\r\n   \"en\":{\r\n      \"appointment_new_title\":\"New Appointment\",\r\n      \"appointment_new_body\":\"You have recieved new appointment for service\",\r\n      \"appointment_rescheduled_title\":\"Appointment Rescheduled\",\r\n      \"appointment_rescheduled_body\":\"Your appointment with provider is rescheduled\",\r\n      \"appointment_cancelled_title\":\"Appointment Cancelled\",\r\n      \"appointment_cancelled_body\":\"Client has cancelled the appointment\",\r\n      \"appointment_rejected_title\":\"Appointment Rejected\",\r\n      \"appointment_rejected_body\":\"Provider has rejected the appointment\",\r\n      \"appointment_accepted_title\":\"Appointment Accepted\",\r\n      \"appointment_accepted_body\":\"Provider has accepted the appointment\",\r\n      \"appointment_ongoing_title\":\"Appointment Started\",\r\n      \"appointment_ongoing_body\":\"Provider has started the appointment\",\r\n      \"appointment_complete_title\":\"Appointment Complete\",\r\n      \"appointment_complete_body\":\"Your appointment with provider is complete\"\r\n   },\r\n \"it\":{     \r\n\"appointment_new_title\":\"IT: New Appointment\", \r\n\"appointment_new_body\":\"You have recieved new appointment for service\",\r\n      \"appointment_rescheduled_title\":\"Appointment Rescheduled\",\r\n      \"appointment_rescheduled_body\":\"Your appointment with provider is rescheduled\",\r\n      \"appointment_cancelled_title\":\"Appointment Cancelled\",\r\n      \"appointment_cancelled_body\":\"Client has cancelled the appointment\",\r\n      \"appointment_rejected_title\":\"Appointment Rejected\",\r\n      \"appointment_rejected_body\":\"Provider has rejected the appointment\",\r\n      \"appointment_accepted_title\":\"Appointment Accepted\",\r\n      \"appointment_accepted_body\":\"Provider has accepted the appointment\",\r\n      \"appointment_ongoing_title\":\"Appointment Started\",\r\n      \"appointment_ongoing_body\":\"Provider has started the appointment\",\r\n      \"appointment_complete_title\":\"Appointment Complete\",\r\n      \"appointment_complete_body\":\"Your appointment with provider is complete\"\r\n   }\r\n\r\n}');
 
 -- --------------------------------------------------------
 
@@ -591,24 +543,25 @@ CREATE TABLE `users` (
   `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `image_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mobile_number` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mobile_verified` tinyint(1) NOT NULL DEFAULT '0',
-  `active` tinyint(3) UNSIGNED NOT NULL DEFAULT '1',
+  `mobile_verified` tinyint(1) NOT NULL DEFAULT 0,
+  `active` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
   `confirmation_code` char(36) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `confirmed` tinyint(1) NOT NULL DEFAULT '1',
+  `confirmed` tinyint(1) NOT NULL DEFAULT 1,
   `fcm_registration_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `language` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'en',
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `fcm_registration_id_provider` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `image_url`, `mobile_number`, `mobile_verified`, `active`, `confirmation_code`, `confirmed`, `fcm_registration_id`, `language`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Admin', 'admin@example.com', '$2y$10$b3huhe4aJ5A.pg4fI3N7ce2r97.yT9wDH8RxaCzrl1P9CWYRpDlw.', NULL, '1212121212', 1, 1, '773eff8e-c1e5-4d3b-9e0e-7d0af8d1d8f8', 1, NULL, 'en', NULL, '2019-09-26 04:43:18', '2019-09-26 04:43:18', NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `image_url`, `mobile_number`, `mobile_verified`, `active`, `confirmation_code`, `confirmed`, `fcm_registration_id`, `language`, `remember_token`, `created_at`, `updated_at`, `deleted_at`, `fcm_registration_id_provider`) VALUES
+(1, 'Admin', 'admin@example.com', '$2y$10$b3huhe4aJ5A.pg4fI3N7ce2r97.yT9wDH8RxaCzrl1P9CWYRpDlw.', NULL, '1212121212', 1, 1, '773eff8e-c1e5-4d3b-9e0e-7d0af8d1d8f8', 1, NULL, 'en', NULL, '2019-09-26 04:43:18', '2019-09-26 04:43:18', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -868,7 +821,7 @@ ALTER TABLE `faq`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `oauth_clients`
