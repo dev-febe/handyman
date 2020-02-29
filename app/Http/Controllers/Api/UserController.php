@@ -75,5 +75,7 @@ class UserController extends Controller
             null,
             ["title" => $language->get('chat_new_message'), "body" => $language->get('chat_new_body') . $notifyingUser->name]
         );
+
+        return response()->json([], 200);
     }
 }
