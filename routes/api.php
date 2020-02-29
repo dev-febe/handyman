@@ -92,6 +92,7 @@ Route::namespace('Api')->name('api.')->group(function () {
 
         Route::get('/user', 'UserController@show')->name('user.show');
         Route::put('/user', 'UserController@update')->name('user.update');
+        Route::post('/user/push-notification', 'UserController@pushNotification')->name('user.pushNotification');
 
         Route::get('/category', 'CategoryController@index')->name('category.index');
 
