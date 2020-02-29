@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 15, 2020 at 02:14 PM
+-- Generation Time: Feb 29, 2020 at 03:07 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.2.26
 
@@ -164,7 +164,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (25, '2019_06_07_123211_plans_metadata', 1),
 (26, '2019_06_10_000001_create_provider_portfolios_table', 1),
 (27, '2019_07_01_000010_create_active_log_table', 1),
-(28, '2019_07_01_000015_alter_users_table', 2);
+(28, '2019_07_01_000015_alter_users_table', 1),
+(29, '2019_07_01_000020_create_plan_usage_logs_table', 1);
 
 -- --------------------------------------------------------
 
@@ -223,8 +224,8 @@ CREATE TABLE `oauth_clients` (
 --
 
 INSERT INTO `oauth_clients` (`id`, `user_id`, `name`, `secret`, `redirect`, `personal_access_client`, `password_client`, `revoked`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Handyman Personal Access Client', 'Ubdf1actzuhNOEJsXxYwipysssgINBenGCGFN7gC', 'http://localhost', 1, 0, 0, '2019-09-26 04:43:23', '2019-09-26 04:43:23'),
-(2, NULL, 'Handyman Password Grant Client', 'FTri0xQQlLrrKfOZsnC8fF9NCVFzPXm54N9sSUzR', 'http://localhost', 0, 1, 0, '2019-09-26 04:43:23', '2019-09-26 04:43:23');
+(1, NULL, 'Handyman Personal Access Client', 'buOMijaxMzHMqlqcBkwJlT5ZDkqUppuLCH8zsMYc', 'http://localhost', 1, 0, 0, '2020-02-29 08:36:57', '2020-02-29 08:36:57'),
+(2, NULL, 'Handyman Password Grant Client', 'kXxfLZ3YQRA01VVog4dekSR3Ta5DhMi2j3R8cefr', 'http://localhost', 0, 1, 0, '2020-02-29 08:36:57', '2020-02-29 08:36:57');
 
 -- --------------------------------------------------------
 
@@ -244,7 +245,7 @@ CREATE TABLE `oauth_personal_access_clients` (
 --
 
 INSERT INTO `oauth_personal_access_clients` (`id`, `client_id`, `created_at`, `updated_at`) VALUES
-(1, 1, '2019-09-26 04:43:23', '2019-09-26 04:43:23');
+(1, 1, '2020-02-29 08:36:57', '2020-02-29 08:36:57');
 
 -- --------------------------------------------------------
 
@@ -294,9 +295,9 @@ CREATE TABLE `plans` (
 --
 
 INSERT INTO `plans` (`id`, `name`, `description`, `price`, `currency`, `duration`, `metadata`, `created_at`, `updated_at`) VALUES
-(1, 'Premium', 'Get 10 leads per day for a month.', 50.00, 'INR', 30, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
-(2, 'Economy', 'Get 5 leads per day for a month.', 30.00, 'INR', 30, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
-(3, 'Basic', 'Get 1 leads for a month.', 30.00, 'INR', 30, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45');
+(1, 'Premium', 'Get 10 leads per day for a month.', 50.00, 'INR', 30, NULL, '2020-02-29 08:36:53', '2020-02-29 08:36:53'),
+(2, 'Economy', 'Get 5 leads per day for a month.', 30.00, 'INR', 30, NULL, '2020-02-29 08:36:53', '2020-02-29 08:36:53'),
+(3, 'Basic', 'Get 1 leads for a month.', 30.00, 'INR', 30, NULL, '2020-02-29 08:36:53', '2020-02-29 08:36:53');
 
 -- --------------------------------------------------------
 
@@ -322,11 +323,11 @@ CREATE TABLE `plans_features` (
 --
 
 INSERT INTO `plans_features` (`id`, `plan_id`, `name`, `code`, `description`, `type`, `limit`, `metadata`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 300, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
-(2, 2, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 150, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
-(3, 3, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 30, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
-(4, 1, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45'),
-(5, 2, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2019-09-26 04:43:45', '2019-09-26 04:43:45');
+(1, 1, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 300, NULL, '2020-02-29 08:36:53', '2020-02-29 08:36:53'),
+(2, 2, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 150, NULL, '2020-02-29 08:36:53', '2020-02-29 08:36:53'),
+(3, 3, 'Leads per day', 'leads_per_day', 'leads_per_day', 'limit', 30, NULL, '2020-02-29 08:36:53', '2020-02-29 08:36:53'),
+(4, 1, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2020-02-29 08:36:53', '2020-02-29 08:36:53'),
+(5, 2, 'Advertise', 'advertise', 'advertise', 'feature', 0, NULL, '2020-02-29 08:36:53', '2020-02-29 08:36:53');
 
 -- --------------------------------------------------------
 
@@ -363,6 +364,19 @@ CREATE TABLE `plans_usages` (
   `subscription_id` int(11) NOT NULL,
   `code` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `used` double(9,2) NOT NULL DEFAULT 0.00,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `plan_usage_logs`
+--
+
+CREATE TABLE `plan_usage_logs` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `subscription_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -481,7 +495,7 @@ INSERT INTO `settings` (`id`, `key`, `value`) VALUES
 (8, 'about_us', 'Demo privacy policy'),
 (9, 'faq', 'Demo FAQ'),
 (10, 'terms', 'Demo Terms and Condition'),
-(11, 'language', '{\r\n   \"en\":{\r\n      \"appointment_new_title\":\"New Appointment\",\r\n      \"appointment_new_body\":\"You have recieved new appointment for service\",\r\n      \"appointment_rescheduled_title\":\"Appointment Rescheduled\",\r\n      \"appointment_rescheduled_body\":\"Your appointment with provider is rescheduled\",\r\n      \"appointment_cancelled_title\":\"Appointment Cancelled\",\r\n      \"appointment_cancelled_body\":\"Client has cancelled the appointment\",\r\n      \"appointment_rejected_title\":\"Appointment Rejected\",\r\n      \"appointment_rejected_body\":\"Provider has rejected the appointment\",\r\n      \"appointment_accepted_title\":\"Appointment Accepted\",\r\n      \"appointment_accepted_body\":\"Provider has accepted the appointment\",\r\n      \"appointment_ongoing_title\":\"Appointment Started\",\r\n      \"appointment_ongoing_body\":\"Provider has started the appointment\",\r\n      \"appointment_complete_title\":\"Appointment Complete\",\r\n      \"appointment_complete_body\":\"Your appointment with provider is complete\"\r\n   },\r\n \"it\":{     \r\n\"appointment_new_title\":\"IT: New Appointment\", \r\n\"appointment_new_body\":\"You have recieved new appointment for service\",\r\n      \"appointment_rescheduled_title\":\"Appointment Rescheduled\",\r\n      \"appointment_rescheduled_body\":\"Your appointment with provider is rescheduled\",\r\n      \"appointment_cancelled_title\":\"Appointment Cancelled\",\r\n      \"appointment_cancelled_body\":\"Client has cancelled the appointment\",\r\n      \"appointment_rejected_title\":\"Appointment Rejected\",\r\n      \"appointment_rejected_body\":\"Provider has rejected the appointment\",\r\n      \"appointment_accepted_title\":\"Appointment Accepted\",\r\n      \"appointment_accepted_body\":\"Provider has accepted the appointment\",\r\n      \"appointment_ongoing_title\":\"Appointment Started\",\r\n      \"appointment_ongoing_body\":\"Provider has started the appointment\",\r\n      \"appointment_complete_title\":\"Appointment Complete\",\r\n      \"appointment_complete_body\":\"Your appointment with provider is complete\"\r\n   }\r\n\r\n}');
+(11, 'language', '{\n   \"en\":{\n      \"appointment_new_title\":\"New Appointment\",\n      \"appointment_new_body\":\"You have recieved new appointment for service\",\n      \"appointment_rescheduled_title\":\"Appointment Rescheduled\",\n      \"appointment_rescheduled_body\":\"Your appointment with provider is rescheduled\",\n      \"appointment_cancelled_title\":\"Appointment Cancelled\",\n      \"appointment_cancelled_body\":\"Client has cancelled the appointment\",\n      \"appointment_rejected_title\":\"Appointment Rejected\",\n      \"appointment_rejected_body\":\"Provider has rejected the appointment\",\n      \"appointment_accepted_title\":\"Appointment Accepted\",\n      \"appointment_accepted_body\":\"Provider has accepted the appointment\",\n      \"appointment_ongoing_title\":\"Appointment Started\",\n      \"appointment_ongoing_body\":\"Provider has started the appointment\",\n      \"appointment_complete_title\":\"Appointment Complete\",\n      \"appointment_complete_body\":\"Your appointment with provider is complete\"\n   }\n}');
 
 -- --------------------------------------------------------
 
@@ -561,7 +575,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `image_url`, `mobile_number`, `mobile_verified`, `active`, `confirmation_code`, `confirmed`, `fcm_registration_id`, `language`, `remember_token`, `created_at`, `updated_at`, `deleted_at`, `fcm_registration_id_provider`) VALUES
-(1, 'Admin', 'admin@example.com', '$2y$10$b3huhe4aJ5A.pg4fI3N7ce2r97.yT9wDH8RxaCzrl1P9CWYRpDlw.', NULL, '1212121212', 1, 1, '773eff8e-c1e5-4d3b-9e0e-7d0af8d1d8f8', 1, NULL, 'en', NULL, '2019-09-26 04:43:18', '2019-09-26 04:43:18', NULL, NULL);
+(1, 'Admin', 'admin@example.com', '$2y$10$FEMzH7La3H9/rtyjeSQAMOQJdM.SkB.cfirH2ECLuz5I57nyOgFOq', NULL, '1212121212', 1, 1, '057d3126-92e9-41fd-a9aa-6b6f80355eaa', 1, NULL, 'en', NULL, '2020-02-29 08:36:53', '2020-02-29 08:36:53', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -700,6 +714,12 @@ ALTER TABLE `plans_usages`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `plan_usage_logs`
+--
+ALTER TABLE `plan_usage_logs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `providers_categories`
 --
 ALTER TABLE `providers_categories`
@@ -821,7 +841,7 @@ ALTER TABLE `faq`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `oauth_clients`
@@ -857,6 +877,12 @@ ALTER TABLE `plans_subscriptions`
 -- AUTO_INCREMENT for table `plans_usages`
 --
 ALTER TABLE `plans_usages`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `plan_usage_logs`
+--
+ALTER TABLE `plan_usage_logs`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
