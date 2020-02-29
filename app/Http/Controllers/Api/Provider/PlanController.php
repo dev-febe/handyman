@@ -72,6 +72,9 @@ class PlanController extends Controller
     {
         $user = Auth::user();
 
+        if($user->hasActiveSubscription()) {
+            $user->cancelCurrentSubscription();
+        }
         $user->subscribeTo($plan, $plan->duration);
     }
 }
