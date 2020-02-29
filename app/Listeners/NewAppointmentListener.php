@@ -36,14 +36,14 @@ class NewAppointmentListener
             $this->event = $event;
             $this->appointment = $event->appointment;
 
-            if($this->appointment->provider->user->fcm_registration_id) {
+            if($this->appointment->provider->user->fcm_registration_id_provider) {
 
                 $languageCode = $this->appointment->provider->user->language;
                 $language = new Language($languageCode);
 
                 $oneSignal = PushNotificationHelper::getOneSignalInstance("provider");
                 $oneSignal->sendNotificationToUser($language->get('appointment_new_title'),
-                    $this->appointment->provider->user->fcm_registration_id,
+                    $this->appointment->provider->user->fcm_registration_id_provider,
                     null,
                     ["title" => $language->get('appointment_new_title'), "body" => $language->get('appointment_new_body'), "appoinment_id" => $this->appointment->id]);
             }
