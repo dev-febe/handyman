@@ -29,7 +29,9 @@ class Language
                 "appointment_ongoing_title" => "Appointment Started",
                 "appointment_ongoing_body" => "Provider has started the appointment",
                 "appointment_complete_title" => "Appointment Complete",
-                "appointment_complete_body" => "Your appointment with provider is complete"
+                "appointment_complete_body" => "Your appointment with provider is complete",
+                "chat_new_message" => "New message",
+                "chat_new_body" => "You have a new message from "
             ]
         ]));
 
