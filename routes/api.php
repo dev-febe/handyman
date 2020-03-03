@@ -86,6 +86,18 @@ Route::namespace('Api')->name('api.')->group(function () {
 
     Route::get('/faq-help', 'FaqController@index')->name('faq.index');
 
+    Route::get('/category', 'CategoryController@index')->name('category.index');
+
+    Route::namespace('Customer')->prefix('customer')->name('customer.')->group(function () {
+        Route::get('/users/provider/{user}', 'ProviderController@providerByUserId')->name('provider.providerByUserId');
+        Route::get('/providers', 'ProviderController@index')->name('provider.index');
+        Route::get('/providers/{provider}', 'ProviderController@show')->name('provider.show');
+        Route::get('/providers/{provider}/rating-summary', 'ProviderController@ratingSummary')->name('provider.ratingsSummary');
+        Route::get('/providers/{provider}/ratings', 'ProviderController@ratings')->name('provider.ratings');
+        Route::get('/providers/{provider}/portfolios', 'ProviderController@portfolios')->name('provider.portfolio');
+    });
+
+
     Route::middleware('auth:api')->group(function () {
         // activity log
         Route::post('/activity-log', 'ActiveLogController@store')->name('activitylog.store');
@@ -94,19 +106,11 @@ Route::namespace('Api')->name('api.')->group(function () {
         Route::put('/user', 'UserController@update')->name('user.update');
         Route::post('/user/push-notification', 'UserController@pushNotification')->name('user.pushNotification');
 
-        Route::get('/category', 'CategoryController@index')->name('category.index');
-
         /* Customer related APIs */
         Route::namespace('Customer')->prefix('customer')->name('customer.')->group(function () {
 
             /* provider related */
-            Route::get('/users/provider/{user}', 'ProviderController@providerByUserId')->name('provider.providerByUserId');
-            Route::get('/providers', 'ProviderController@index')->name('provider.index');
-            Route::get('/providers/{provider}', 'ProviderController@show')->name('provider.show');
-            Route::get('/providers/{provider}/rating-summary', 'ProviderController@ratingSummary')->name('provider.ratingsSummary');
-            Route::get('/providers/{provider}/ratings', 'ProviderController@ratings')->name('provider.ratings');
             Route::post('/providers/{provider}/ratings', 'ProviderController@rate')->name('provider.rate');
-            Route::get('/providers/{provider}/portfolios', 'ProviderController@portfolios')->name('provider.portfolio');
 
             /* address related */
             Route::get('/address', 'AddressController@index')->name('address.index');
