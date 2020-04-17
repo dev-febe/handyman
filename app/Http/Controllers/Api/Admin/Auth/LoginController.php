@@ -20,7 +20,7 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if ($this->validate($request) || Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             if(!Auth::user()->hasRole('administrator')) {
                 return response()->json(["message" => "Permission denied. No suitable role found"], 400);
             }
