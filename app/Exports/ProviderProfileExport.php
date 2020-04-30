@@ -22,10 +22,11 @@ class ProviderProfileExport implements FromQuery, WithHeadings, ShouldAutoSize, 
 
     public function map($provider): array
     {
+        $categoryTitle = $provider->primary_category ? $provider->primary_category->title : "";
         return [
             $provider->id,
             $provider->user->name,
-            $provider->primary_category->title,
+            $categoryTitle,
             $provider->document_url,
             $provider->price,
             $provider->price_type,
