@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Exports\AppointmentExport;
-use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Events\UpdateAppointment;
+use App\Exports\AppointmentExport;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 
 class AppointmentController extends Controller
 {
@@ -79,6 +80,8 @@ class AppointmentController extends Controller
         $appointment->fill($request->all());
 
         $appointment->save();
+
+        event(new UpdateAppointment($appointment, false));
 
         return response()->json($appointment);
     }
