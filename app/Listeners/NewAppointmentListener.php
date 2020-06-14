@@ -47,6 +47,7 @@ class NewAppointmentListener
                 'status' => 'debit',
                 'amount' => $this->appointment->price,
                 'user_id' => $this->appointment->user_id,
+                'source' => 'appointment',
                 'appointment_id' => $this->appointment->id
             ]);
 

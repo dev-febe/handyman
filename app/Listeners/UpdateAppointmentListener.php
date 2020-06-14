@@ -112,6 +112,7 @@ class UpdateAppointmentListener
                     'status' => 'credit',
                     'amount' => $priceAfterAdminShare,
                     'user_id' => $this->appointment->provider->user_id,
+                    'source' => 'appointment',
                     'appointment_id' => $this->appointment->id
                 ]);
                 
