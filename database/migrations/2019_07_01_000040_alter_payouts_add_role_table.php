@@ -14,7 +14,7 @@ class AlterPayoutsAddRoleTable extends Migration
     public function up()
     {
         Schema::table('payouts', function (Blueprint $table) {
-            $table->enum('role', ['customer', 'provider']);
+            $table->enum('role', ['customer', 'provider'])->default('provider');
         });
     }
 
