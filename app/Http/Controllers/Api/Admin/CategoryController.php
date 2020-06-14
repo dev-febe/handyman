@@ -36,7 +36,9 @@ class CategoryController extends Controller
         $request->validate([
             'title' => 'required|string',
             'image' => 'image|nullable',
-	    'secondary_image' => 'image|nullable',
+            'commission' => 'required|numeric',
+            'commission_type' => 'required|in:fixed,percent',
+	        'secondary_image' => 'image|nullable',
             'parent_id' => 'exists:categories,id|nullable'
         ]);
 
@@ -81,6 +83,8 @@ class CategoryController extends Controller
     {
         $request->validate([
             'title' => 'required|string',
+            'commission' => 'required|numeric',
+            'commission_type' => 'required|in:fixed,percent',
             'image' => 'image|nullable',
             'parent_id' => 'exists:categories,id|nullable'
         ]);

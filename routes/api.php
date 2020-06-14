@@ -36,6 +36,9 @@ Route::namespace('Api')->name('api.')->group(function () {
             Route::get('/categories/{category}/subcategories', 'CategoryController@allSubCategories');
             Route::apiResource('categories', 'CategoryController');
 
+            // payout
+            Route::apiResource('payouts', 'PayoutController')->except('create');
+
             // provider profile
             Route::apiResource('providers', 'ProviderProfileController')->except('create');
 
@@ -106,6 +109,20 @@ Route::namespace('Api')->name('api.')->group(function () {
         Route::put('/user', 'UserController@update')->name('user.update');
         Route::post('/user/push-notification', 'UserController@pushNotification')->name('user.pushNotification');
 
+        // wallet and payment
+        Route::post('/wallet/recharge', 'WalletController@makeStripePayment')->name('wallet.recharge');
+        // Route::post('/wallet/withdraw', 'WalletController@withdraw')->name('wallet.withdraw');
+        Route::get('/wallet/check-balance', 'WalletController@checkBalance')->name('wallet.checkBalance');
+        Route::get('/wallet/transactions', 'WalletController@transactions')->name('wallet.transactions');
+
+        // bank details
+        Route::get('/bank-detail', 'BankDetailController@show')->name('bankdetail.show');
+        Route::post('/bank-detail', 'BankDetailController@store')->name('bankdetail.store');
+
+        // payouts
+        Route::get('/payouts', 'PayoutController@index')->name('payout.index');
+        Route::post('/payouts', 'PayoutController@store')->name('payout.store');
+
         /* Customer related APIs */
         Route::namespace('Customer')->prefix('customer')->name('customer.')->group(function () {
 
@@ -144,9 +161,9 @@ Route::namespace('Api')->name('api.')->group(function () {
             Route::put('/appointment/{appointment}', 'AppointmentController@update')->name('appointment.update');
 
             /* plans related */
-            Route::get('/plans', 'PlanController@plans')->name('plans.index');
-            Route::post('/plans/{plan}/payment/stripe', 'PlanController@makeStripePayment')->name('plans.makeStripePayment');
-            Route::get('/plan-details', 'PlanController@planDetails')->name('plans.planDetails');
+            // Route::get('/plans', 'PlanController@plans')->name('plans.index');
+            // Route::post('/plans/{plan}/payment/stripe', 'PlanController@makeStripePayment')->name('plans.makeStripePayment');
+            // Route::get('/plan-details', 'PlanController@planDetails')->name('plans.planDetails');
         });
     });
 });

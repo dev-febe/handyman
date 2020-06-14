@@ -2,17 +2,18 @@
 
 namespace App\Models\Auth\User;
 
-use App\Models\Auth\User\Traits\Ables\Protectable;
-use App\Models\Auth\User\Traits\Attributes\UserAttributes;
+use Depsimon\Wallet\HasWallet;
+use Laravel\Passport\HasApiTokens;
+use Kyslik\ColumnSortable\Sortable;
+use Rennokki\Plans\Traits\HasPlans;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Auth\User\Traits\Ables\Rolable;
+use App\Models\Auth\User\Traits\Ables\Protectable;
 use App\Models\Auth\User\Traits\Scopes\UserScopes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Auth\User\Traits\Relations\UserRelations;
-use Kyslik\ColumnSortable\Sortable;
-use Laravel\Passport\HasApiTokens;
-use Rennokki\Plans\Traits\HasPlans;
+use App\Models\Auth\User\Traits\Attributes\UserAttributes;
 
 /**
  * App\Models\Auth\User\User
@@ -62,7 +63,8 @@ class User extends Authenticatable
         Sortable,
         HasApiTokens,
         Protectable,
-        HasPlans;
+        HasPlans,
+        HasWallet;
 
     public $sortable = ['name', 'email', 'created_at', 'updated_at'];
 
@@ -115,5 +117,13 @@ class User extends Authenticatable
     public function appointments()
     {
         return $this->hasMany('App\Models\Appointment', 'user_id');
+    }
+
+    /**
+     * Get the bank detail associated with the user
+     */
+    public function bankDetail()
+    {
+        return $this->hasOne('App\Models\BankDetail', 'user_id');
     }
 }

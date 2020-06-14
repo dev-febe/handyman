@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Events\Auth\Registered;
+use Validator;
+use App\Models\BankDetail;
 use App\Exports\UsersExport;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Auth\Role\Role;
 use App\Models\Auth\User\User;
 use App\Models\ProviderProfile;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
-use Validator;
 
 
 class UserController extends Controller
@@ -52,7 +52,7 @@ class UserController extends Controller
     {
         $user = User::with('roles')->find($id);
 
-        return response()->json($user);
+        return response()->json($user->load('wallet')->load('bankDetail'));
     }
 
     /**
@@ -87,7 +87,7 @@ class UserController extends Controller
             }
         }
 
-        return response()->json($user);
+        return response()->json($user->load('wallet')->load('bankDetail'));
     }
 
     /**
@@ -103,7 +103,13 @@ class UserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255',
             'mobile_number' => 'required|max:15',
-            'image' => 'sometimes|image'
+            'image' => 'sometimes|image',
+            'role' => 'required|array|exists:roles,id',
+            'wallet_balance' => 'numeric|nullable|min:0',
+            'account_name' => 'required_with:bank_name,account_number,ifsc|string|nullable',
+            'bank_name' => 'required_with:account_name,account_number,ifsc|string|nullable',
+            'account_number' => 'required_with:account_name,bank_name,ifsc|string|nullable',
+            'ifsc' => 'required_with:account_name,bank_name,account_number|string|nullable'
         ]);
 
         $validator->sometimes('email', 'unique:users', function ($input) use ($user) {
@@ -144,8 +150,37 @@ class UserController extends Controller
                 }
             }
         }
+        
+        // update wallet
+        $newBalance = $request->wallet_balance ? $request->wallet_balance : 0;
+        $balance = $user->balance ? $user->balance : 0;
+        $diff = $newBalance - $balance;
+        if($diff > 0) {
+            // make a deposit
+            $user->deposit($diff);
+        } else {
+            // make a withdraw
+            $user->withdraw(abs($diff));
+        }
 
-        return response()->json($user);
+        // bank details
+        if($request->account_name) {
+            if($user->bankDetail) {
+                $bankDetail = $user->bankDetail;
+            } else {
+                $bankDetail = new BankDetail();
+            }
+            $bankDetailsData = array_merge(["user_id" => $user->id, "name" => $request->account_name], $request->only(['bank_name', 'account_number', 'ifsc']));
+            $bankDetail->fill($bankDetailsData);
+            $bankDetail->save();
+        } else if(!$request->account_name && $user->bankDetail) {
+            $bankDetail = $user->bankDetail;
+            $bankDetailsData = array_merge(["user_id" => $user->id, "name" => $request->account_name], $request->only(['bank_name', 'account_number', 'ifsc']));
+            $bankDetail->fill($bankDetailsData);
+            $bankDetail->save();
+        }
+
+        return response()->json($user->load('wallet')->load('bankDetail'));
     }
 
     /**

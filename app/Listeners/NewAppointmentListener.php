@@ -2,11 +2,12 @@
 
 namespace App\Listeners\Auth;
 
-use App\Helpers\Language;
 use OneSignal;
+use App\Helpers\Language;
+use App\Models\Transaction;
 use App\Events\NewAppointment;
-use App\Helpers\PushNotificationHelper;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\PushNotificationHelper;
 
 
 class NewAppointmentListener
@@ -35,6 +36,19 @@ class NewAppointmentListener
         try {
             $this->event = $event;
             $this->appointment = $event->appointment;
+
+            // deduct balance from user wallet
+            $this->appointment->user->withdraw($this->appointment->price);
+
+            // create a transaction
+            Transaction::create([
+                'title' => 'Appointment Payment',
+                'description' => 'Amount deducted for appointment #' . $this->appointment->id,
+                'status' => 'debit',
+                'amount' => $this->appointment->price,
+                'user_id' => $this->appointment->user_id,
+                'appointment_id' => $this->appointment->id
+            ]);
 
             if($this->appointment->provider->user->fcm_registration_id_provider) {
 

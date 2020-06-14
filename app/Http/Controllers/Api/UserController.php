@@ -18,7 +18,7 @@ class UserController extends Controller
     */
     public function show()
     {
-        return response()->json(Auth::user());
+        return response()->json(Auth::user()->load('wallet'));
     }
     
     
@@ -50,7 +50,7 @@ class UserController extends Controller
         
         $user->save();
         
-        return response()->json($user);
+        return response()->json($user->load('wallet'));
     }
     
     public function pushNotification(Request $request)

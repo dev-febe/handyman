@@ -2,11 +2,14 @@
 
 namespace App\Listeners\Auth;
 
-use App\Helpers\Language;
 use OneSignal;
+use App\Models\Setting;
+use App\Models\Category;
+use App\Helpers\Language;
+use App\Models\Transaction;
 use App\Events\UpdateAppointment;
-use App\Helpers\PushNotificationHelper;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\PushNotificationHelper;
 
 
 class UpdateAppointmentListener
@@ -89,6 +92,29 @@ class UpdateAppointmentListener
                         ["title" => $clientLanguage->get('appointment_ongoing_title'), "body" => $clientLanguage->get('appointment_ongoing_body'), "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "complete") {
+
+                // credit provider's wallet after deducting admin's commission
+                $appointmentCategory = Category::find($this->appointment->category_id);
+                $price = $this->appointment->price;
+                if($appointmentCategory->commission_type == 'fixed') {
+                    $priceAfterAdminShare = $price - $appointmentCategory->commission;
+                    $priceAfterAdminShare = $priceAfterAdminShare >= 0 ? $priceAfterAdminShare : 0;
+                } else if($appointmentCategory->commission_type == 'percent') {
+                    $adminShareInPercent = (int)$appointmentCategory->commission;
+                    $priceAfterAdminShare = $price - ($price * ($adminShareInPercent/100));    
+                }
+                $this->ride->provider->user->deposit($priceAfterAdminShare);
+
+                // create a transaction
+                Transaction::create([
+                    'title' => 'Appointment Payment',
+                    'description' => 'Amount received for appointment #' . $this->appointment->id,
+                    'status' => 'credit',
+                    'amount' => $priceAfterAdminShare,
+                    'user_id' => $this->appointment->provider->user_id,
+                    'appointment_id' => $this->appointment->id
+                ]);
+                
                 // send notification to user
                 if($this->appointment->user->fcm_registration_id) {
                     $oneSignal = PushNotificationHelper::getOneSignalInstance();

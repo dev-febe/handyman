@@ -20,9 +20,14 @@ class Appointment extends Model
 
     protected $table = 'appointments';
 
-    protected $fillable = ['date', 'address_id', 'provider_id', 'user_id', 'time_from', 'time_to', 'status', 'category_id', 'notes'];
+    protected $fillable = ['date', 'address_id', 'provider_id', 'user_id', 'time_from', 'time_to', 'status', 'category_id', 'notes',
+        'price'];
 
     protected $with = array('user', 'provider', 'logs', 'address', 'category');
+
+    protected $casts = [
+        'price' => 'float'
+    ];
 
     public function user()
     {
