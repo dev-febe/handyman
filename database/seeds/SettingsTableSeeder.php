@@ -38,7 +38,9 @@ class SettingsTableSeeder extends Seeder
       "appointment_ongoing_title":"Appointment Started",
       "appointment_ongoing_body":"Provider has started the appointment",
       "appointment_complete_title":"Appointment Complete",
-      "appointment_complete_body":"Your appointment with provider is complete"
+      "appointment_complete_body":"Your appointment with provider is complete",
+      "payout_complete_title":"Payout Complete",
+      "payout_complete_body":"Your payout is complete"
    }
 }'],
         ]);

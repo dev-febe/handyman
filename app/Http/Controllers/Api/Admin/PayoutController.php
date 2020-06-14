@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Payout;
-use Illuminate\Http\Request;
 use Validator;
+use App\Models\Payout;
+use App\Helpers\Language;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Helpers\PushNotificationHelper;
 
 
 class PayoutController extends Controller
@@ -34,6 +37,18 @@ class PayoutController extends Controller
         // withdraw amount from user's wallet
         if($payout->status != 'complete' && $request->status == 'complete') {
             $payout->user->withdraw($request->amount);
+            
+            Transaction::create([
+                'title' => 'Payout complete',
+                'description' => 'Payout #' . $payout->id . ' complete',
+                'status' => 'debit',
+                'amount' => $request->amount,
+                'user_id' => $payout->user_id,
+                'source' => 'payout',
+                'appointment_id' => null
+            ]);
+
+            $this->notifyUser($payout);
         }
 
         $payout->fill($request->only(['amount', 'status']));
@@ -47,5 +62,18 @@ class PayoutController extends Controller
         $payout->delete();
 
         return response()->json([], 204);
+    }
+
+    private function notifyUser(Payout $payout)
+    {
+        $notificationId = $payout->role == 'provider' ? $payout->user->fcm_registration_id_provider : $payout->user->fcm_registration_id;
+        if($notificationId) {
+            $oneSignal = PushNotificationHelper::getOneSignalInstance();
+            $language = new Language($payout->user->language);
+            $oneSignal->sendNotificationToUser($language->get('payout_complete_title'),
+                $this->appointment->user->fcm_registration_id,
+                null,
+                ["title" => $language->get('payout_complete_title'), "body" => $language->get('payout_complete_body'), "payout_id" => $payout->id]);
+        }
     }
 }

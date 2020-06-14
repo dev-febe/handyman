@@ -20,7 +20,8 @@ class PayoutController extends Controller
     {
         $user = Auth::user();
         $request->validate([
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric',
+            'role' => 'required|in:customer,provider'
         ]);
 
         if(((float)$user->balance) < ((float)$request->amount)) {
@@ -31,7 +32,8 @@ class PayoutController extends Controller
 
         $payout = Payout::create([
             'requested_amount' => $request->amount,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'role' => $request->role
         ]);
 
         return response()->json($payout);

@@ -56,6 +56,7 @@ class UpdateAppointmentListener
                         ["title" => $clientLanguage->get('appointment_rescheduled_title'), "body" => $clientLanguage->get('appointment_rescheduled_body'), "appoinment_id" => $this->appointment->id]);
                 }
             } else if($this->appointment->status == "cancelled") {
+                $this->refund();
                 if($this->appointment->provider->user->fcm_registration_id) {
                     // send notification to provider
                     $oneSignal = PushNotificationHelper::getOneSignalInstance("provider");
@@ -129,5 +130,20 @@ class UpdateAppointmentListener
         } catch (\Exception $ex) {
             Log::error('Exception: Notification not sent', [$ex->getMessage(), $ex->getTraceAsString()]);
         }
+    }
+
+    private function refund() 
+    {
+        // refund appointment payment
+        $this->appointment->user->withdraw($this->appointment->price);
+        Transaction::create([
+            'title' => 'Refund Appointment Payment',
+            'description' => 'Amount refunded for appointment #' . $this->appointment->id,
+            'status' => 'credit',
+            'amount' => $this->appointment->price,
+            'user_id' => $this->appointment->user_id,
+            'source' => 'appointment',
+            'appointment_id' => $this->appointment->id
+        ]);
     }
 }
