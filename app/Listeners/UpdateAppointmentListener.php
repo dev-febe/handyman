@@ -103,7 +103,7 @@ class UpdateAppointmentListener
                     $adminShareInPercent = (int)$appointmentCategory->commission;
                     $priceAfterAdminShare = $price - ($price * ($adminShareInPercent/100));    
                 }
-                $this->ride->provider->user->deposit($priceAfterAdminShare);
+                $this->appointment->provider->user->deposit($priceAfterAdminShare);
 
                 // create a transaction
                 Transaction::create([
