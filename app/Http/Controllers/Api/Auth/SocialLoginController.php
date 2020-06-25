@@ -118,7 +118,7 @@ class SocialLoginController extends Controller
     
      private function _getGoogleClientId($os, $role) {
         $client_id_env_key = $os == 'android' ? 'GOOGLE_CLIENT_ID' : 'GOOGLE_IOS_CLIENT_ID';
-        if($role == 'provider') {
+        if($os == 'ios' && $role == 'provider') {
             $client_id_env_key = 'GOOGLE_IOS_PROVIDER_CLIENT_ID';
         }
         return $client_id_env_key;
