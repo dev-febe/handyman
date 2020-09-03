@@ -94,7 +94,7 @@ class ProviderProfile extends Model
 
     public function subcategories()
     {
-        return $this->belongsToMany('App\Models\Category', 'providers_categories', 'provider_id');
+        return $this->belongsToMany('App\Models\Category', 'providers_categories', 'provider_id')->withPivot('price');
     }
 
     public function ratings()

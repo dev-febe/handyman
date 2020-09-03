@@ -25,8 +25,8 @@ class ProviderController extends Controller
         $provider->subcategories()->detach();
 
         // attach categories with menu item
-        foreach($request->sub_categories as $categoryId) {
-            $provider->subcategories()->attach($categoryId);
+        foreach($request->sub_categories as $subCategory) {
+            $provider->subcategories()->attach($subCategory['id'], ['price' => $subCategory['price']]);
         }
 
         return response()->json(Auth::user()->provider);

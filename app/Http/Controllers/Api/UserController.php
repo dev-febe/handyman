@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Setting;
 use App\Helpers\Language;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\Auth\User\User;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\PushNotificationHelper;
+use App\Http\Requests\Api\ReferRequest;
 
 class UserController extends Controller
 {
@@ -51,6 +55,59 @@ class UserController extends Controller
         $user->save();
         
         return response()->json($user->load('wallet'));
+    }
+
+    public function refer(ReferRequest $request)
+    {
+        // check if user has already used the referral code
+        if(DB::table('refer')->where('user_id', Auth::user()->id)->exists()) {
+            return response()->json(["message" => "Already referred"], 403);
+        }
+
+        // check if user is not referring himself
+        if(Auth::user()->refer_code == $request->code) {
+            return response()->json(["message" => "You cannot refer yourself"], 403);
+        }
+
+        // get the referrer user
+        $referrer = User::where('refer_code', $request->code)->firstOrFail();
+
+        // get the referral amount
+        $refererAmountSetting = Setting::where('key', 'referer_amount')->firstOrFail();
+        $refererAmount = $refererAmountSetting->value ? $refererAmountSetting->value : 0;
+
+        $referredAmountSetting = Setting::where('key', 'referred_amount')->firstOrFail();
+        $referredAmount = $referredAmountSetting->value ? $referredAmountSetting->value : 0;
+
+        DB::table('refer')->insert(["referrer" => $referrer->id, "user_id" => Auth::user()->id]);
+
+        // credit the amount to referrer
+        $referrer->deposit($refererAmount);
+
+        // create a transaction for refrrer
+        Transaction::create([
+            'title' => 'Referral Reward',
+            'description' => 'Amount added for referral',
+            'status' => 'credit',
+            'amount' => $refererAmount,
+            'user_id' => $referrer->id,
+            'source' => 'refer'
+        ]);
+
+        // credit the amount to user
+        Auth::user()->deposit($referredAmount);
+
+        // create a transaction for user
+        Transaction::create([
+            'title' => 'Referral Reward',
+            'description' => 'Amount added for referral',
+            'status' => 'credit',
+            'amount' => $referredAmount,
+            'user_id' => Auth::user()->id,
+            'source' => 'refer'
+        ]);
+
+        return response()->json(["message" => "Referal Successfull"], 200);
     }
     
     public function pushNotification(Request $request)

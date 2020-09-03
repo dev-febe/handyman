@@ -137,3 +137,20 @@ if (!function_exists('__trans_choice')) {
         return trans_choice(__($key), $number, $replace, $locale);
     }
 }
+
+if(!function_exists('generate_numeric_otp')) {
+
+    function generate_numeric_otp($n) {
+
+        $token = "";
+        $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $codeAlphabet.= "0123456789";
+        $max = strlen($codeAlphabet);
+
+        for ($i=0; $i < $n; $i++) {
+            $token .= $codeAlphabet[random_int(0, $max-1)];
+        }
+
+        return $token;
+    }
+}

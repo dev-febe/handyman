@@ -33,6 +33,9 @@ class ProviderUpdateRequest extends FormRequest
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'sub_categories' => 'required|array|exists:categories,id',
+            'sub_categories' => 'required|array',
+            'sub_categories.*.id' => 'required|exists:categories,id',
+            'sub_categories.*.price' => 'required|numeric'
         ];
     }
 }

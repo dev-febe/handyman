@@ -98,6 +98,23 @@ class User extends Authenticatable
      */
     protected $dates = ['deleted_at'];
 
+    public static function boot() {
+        parent::boot();
+
+        //while creating/inserting item into db
+        static::creating(function (User $user) {
+            $code = null;
+            while(1) {
+                $code = generate_numeric_otp(6);
+                if(!User::where('refer_code', $code)->exists()) {
+                    break;
+                }
+            }
+            $user->refer_code = $code;
+        });
+
+    }
+
     public function addresses()
     {
         return $this->hasMany('App\Models\Address');

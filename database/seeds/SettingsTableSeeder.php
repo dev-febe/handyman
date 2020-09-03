@@ -23,6 +23,8 @@ class SettingsTableSeeder extends Seeder
             ["key" => "about_us", "value" => "Demo privacy policy"],
             ["key" => "faq", "value" => "Demo FAQ"],
             ["key" => "terms", "value" => "Demo Terms and Condition"],
+            ["key" => "referer_amount", "value" => "10"],
+            ["key" => "referred_amount", "value" => "10"],
             ["key" => "language", "value" => '{
    "en":{
       "appointment_new_title":"New Appointment",

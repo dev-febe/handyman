@@ -23,15 +23,15 @@ class LoginController extends Controller
     |
     */
 
-//    public function authenticate(LoginRequest $request)
-//    {
-//        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-//            $user = Auth::user();
-//            $token = $user->createToken('Default')->accessToken;
-//            return response()->json(["token" => $token, "user" => $user]);
-//        }
-//        return response()->json(["error" => "Invalid Login"], 400);
-//    }
+    //    public function authenticate(LoginRequest $request)
+    //    {
+    //        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+    //            $user = Auth::user();
+    //            $token = $user->createToken('Default')->accessToken;
+    //            return response()->json(["token" => $token, "user" => $user]);
+    //        }
+    //        return response()->json(["error" => "Invalid Login"], 400);
+    //    }
 
     public function authenticate(LoginRequest $request)
     {
@@ -44,37 +44,48 @@ class LoginController extends Controller
         $publicKeyURL = 'https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com';
         $kids = json_decode(file_get_contents($publicKeyURL), true);
 
-        if($request->token) {
+        if ($request->token) {
             try {
                 $decoded = JWT::decode($request->token, $kids, array('RS256'));
 
-                if($decoded->iss !== config('firebase.iss')) {
+                if ($decoded->iss !== config('firebase.iss')) {
                     throw new \Exception('Wrong FIREBASE_ISS provided');
                 }
 
                 $mobile_number = property_exists($decoded, 'phone_number') ? $decoded->phone_number : null;
 
-                if(empty($mobile_number)) {
+                if (empty($mobile_number)) {
                     throw new \Exception('Mobile number not present in token');
                 }
 
-                $user = User::where('mobile_number', 'like', '%' . substr($mobile_number, config('constants.mobile_number_length') * -1) .'%' )->first();
+                $user = User::where('mobile_number', 'like', '%' . substr($mobile_number, config('constants.mobile_number_length') * -1) . '%')->first();
 
-                if(!$user) {
+                if (!$user) {
                     return response()->json(["message" => 'User does not exist'], 404);
                 }
 
-                if(!$user->hasRole($request->role)) {
+                if (!$user->hasRole($request->role)) {
                     $role = Role::where('name', $request->role)->first();
                     $user->roles()->attach($role);
                     event(new Registered($user, $request->role));
+                }
+
+                if (!$user->refer_code) {
+                    // fallback mechanism for older users to get referral code
+                    while (1) {
+                        $code = generate_numeric_otp(6);
+                        if (!User::where('refer_code', $code)->exists()) {
+                            break;
+                        }
+                    }
+                    $user->refer_code = $code;
                 }
 
                 $token = $user->createToken('Default')->accessToken;
                 $user->mobile_verified = 1;
                 $user->save();
                 return response()->json(["token" => $token, "user" => $user->refresh()]);
-            } catch(\Exception $ex) {
+            } catch (\Exception $ex) {
                 throw new BadRequestHttpException($ex->getMessage());
             }
         }
