@@ -25,7 +25,7 @@ class AppointmentController extends Controller
 
         // calculate price
         // get price set by provider for selected category        
-        $subtotal = ProviderProfile::find($request->provider_id)->subcategories()->where('id', $request->category_id)->first()->price;
+        $subtotal = ProviderProfile::find($request->provider_id)->subcategories()->where('id', $request->category_id)->first()->pivot->price;
         $tax_in_percent_setting = Setting::where('key', 'tax_in_percent')->first()->value;
         $tax_in_percent =  !empty($tax_in_percent_setting) ? number_format((float)$tax_in_percent_setting, 2, '.', '') : 0;
         $tax = ($subtotal*($tax_in_percent/100));
