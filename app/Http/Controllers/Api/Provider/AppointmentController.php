@@ -62,12 +62,12 @@ class AppointmentController extends Controller
             ]);
         }
 
-        if($old_status != $appointment->status && $appointment->status == 'accepted') {
-            // deduct the credits
-            $subscription = Auth::user()->activeSubscription();
-            $subscription->consumeFeature('leads_per_day', 1);
-            PlanUsageLog::create(["subscription_id"=> $subscription->id]);
-        }
+        // if($old_status != $appointment->status && $appointment->status == 'accepted') {
+        //     // deduct the credits
+        //     $subscription = Auth::user()->activeSubscription();
+        //     $subscription->consumeFeature('leads_per_day', 1);
+        //     PlanUsageLog::create(["subscription_id"=> $subscription->id]);
+        // }
 
         event(new UpdateAppointment($appointment, $rescheduled));
 
