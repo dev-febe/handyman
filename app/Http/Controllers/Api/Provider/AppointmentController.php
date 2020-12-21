@@ -21,27 +21,27 @@ class AppointmentController extends Controller
 
     public function update(Appointment $appointment, AppointmentUpdateRequest $request)
     {
-        if($request->status == 'accepted') {
-            // can accept the job?
-            $canAccept = false;
-            $user = Auth::user();
-            $leadsRemainingForToday = null;
+        // if($request->status == 'accepted') {
+        //     // can accept the job?
+        //     $canAccept = false;
+        //     $user = Auth::user();
+        //     $leadsRemainingForToday = null;
 
-            if ($user->hasActiveSubscription()) {
-                $subscription = $user->activeSubscription();
-                $leadsUsedToday = PlanUsageLog::getTodayUsage($subscription->id);                
-                $limit = $subscription->features()->code('leads_per_day')->first()->limit / 30;
-                $leadsRemainingForToday = $limit - $leadsUsedToday;
+        //     if ($user->hasActiveSubscription()) {
+        //         $subscription = $user->activeSubscription();
+        //         $leadsUsedToday = PlanUsageLog::getTodayUsage($subscription->id);                
+        //         $limit = $subscription->features()->code('leads_per_day')->first()->limit / 30;
+        //         $leadsRemainingForToday = $limit - $leadsUsedToday;
 
-                if ($leadsRemainingForToday > 0) {
-                    $canAccept = true;
-                }
-            }
+        //         if ($leadsRemainingForToday > 0) {
+        //             $canAccept = true;
+        //         }
+        //     }
 
-            if(!$canAccept) {
-                return response()->json(["message" => 'Not enough credits left'], 403);
-            }
-        }
+        //     if(!$canAccept) {
+        //         return response()->json(["message" => 'Not enough credits left'], 403);
+        //     }
+        // }
 
         $old_status = $appointment->status;
         $rescheduled = false;
