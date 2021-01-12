@@ -71,7 +71,7 @@ class PayoutController extends Controller
             $oneSignal = PushNotificationHelper::getOneSignalInstance();
             $language = new Language($payout->user->language);
             $oneSignal->sendNotificationToUser($language->get('payout_complete_title'),
-                $this->appointment->user->fcm_registration_id,
+                $payout->user->fcm_registration_id,
                 null,
                 ["title" => $language->get('payout_complete_title'), "body" => $language->get('payout_complete_body'), "payout_id" => $payout->id]);
         }
