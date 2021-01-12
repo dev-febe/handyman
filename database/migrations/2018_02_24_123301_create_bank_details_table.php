@@ -18,7 +18,7 @@ class CreateBankDetailsTable extends Migration
             $table->string('name');
             $table->string('bank_name');
             $table->string('account_number');
-            $table->string('ifsc');
+            $table->string('ifsc')->nullable();
             $table->integer('user_id')->unsigned();
             $table->timestamps();
 

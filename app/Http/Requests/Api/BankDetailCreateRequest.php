@@ -27,7 +27,7 @@ class BankDetailCreateRequest extends FormRequest
             'name' => 'required|string',
             'bank_name' => 'required|string',
             'account_number' => 'required|string',
-            'ifsc' => 'required|string'
+            'ifsc' => 'sometimes|string'
         ];
     }
 }
