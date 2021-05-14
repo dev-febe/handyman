@@ -14,7 +14,8 @@ RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.
 RUN yum install yum-utils
 RUN yum-config-manager --enable remi-php71
 
-RUN yum -y install php71w \
+RUN yum clean all
+RUN yum -y install --skip-broken php71w \
 					         php71w-bcmath \
 					         php71w-cli \
 					         php71w-common \

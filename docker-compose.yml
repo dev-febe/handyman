@@ -30,5 +30,5 @@ services:
       - ".:/var/www/laravel-boilerplate"
       - "./dockerfiles/config/nginx/default.conf:/etc/nginx/conf.d/default.conf"
     ports:
-      - "80:80"
+      - "8000:80"
     restart: always
